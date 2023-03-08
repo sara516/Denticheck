@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+        <title>Admin | Denticheck</title>
+        <base href="/">
+        <link rel="icon" type="image/png" href="img/logo.png" />
+    
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/placeholder-loading/dist/css/placeholder-loading.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+
+        <link rel="stylesheet" href="css/general_style.css">
+        
+        <link rel="stylesheet" href="css/admin.css">
+        <script src="https://docraptor.com/docraptor-1.0.0.js"></script>
+        <script src="https://cdn.lordicon.com/xdjxvujz.js"></script>
+    
+        <script src=" https://printjs-4de6.kxcdn.com/print.min.js"></script>
+        <link href=" https://printjs-4de6.kxcdn.com/print.min.css" rel="stylesheet">
+        <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+    
+    </head>
+
+<body>
+
+        <!-- /////////////////////////////////////////////////////////////
+        //! /////////////////!  LOADING PAGE   //////////////////////////
+        //! /////////////////!///////////////////////////////////////////!-->
+
+        <div id="loading_page" >
+            <div class="loader-box">
+                <div class="loading-wrapper">
+                    <div class="loader">
+                        <div class="loader-inner">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="body" class="grid">
+
+        <!-- /********************************** Header left screen ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+        <div id="header" class=" text_left"  >
+            <div id="header-logo-container">
+                <div id="header-logo-container">
+                <img id="header-logo" src="/img/logo_factury.png">
+                </div>
+            </div>
+            <div class="header" >
+            
+              <div class="header-title" > PRODUCTIVITÉ</div>
+          
+              <div class="header-button link selected_link" data-id="dashboard" >
+                  <div class="header-button-icon"><div class="icon_header header-detail"><i class="fas fa-tachometer-alt"></i></div></div>
+                  <div class="content_header">Dashboard</div>
+                  <div class=" hide-tag">Dashboard</div>
+              </div>
+              <div class="header-button link" data-id="statistique">
+                <div class="header-button-icon"><div class="icon_header header-detail"><i class="fa-solid fa-chart-pie"></i></div></div>
+                <div class="content_header">Statistiques</div>
+                <div class="hide-tag">Statistiques</div>
+              </div>
+              <div class="header-button link" data-id="list_staff">
+                <div class="header-button-icon"><div class="icon_header header-detail"><i class="fa-solid fa-users"></i></div></div>
+                <div class="content_header">Commerciaux</div>
+                <div class="hide-tag">Commerciaux</div>
+          
+              </div>
+              
+              <div class="header-title"> DEVIS & FACTURES</div>
+              <div class="header-button link " data-id="crm">
+                  <div class="header-button-icon"><div class="icon_header header-detail"><i class="fa-solid fa-building"></i></div></div>
+                  <div class="content_header">Entreprises</div>                
+                  <div class=" hide-tag">Entreprises</div>                
+              </div>
+              <div class="header-button link " data-id="fournisseur">
+                  <div class="header-button-icon"><div class="icon_header header-detail"><i class="fa-solid fa-cart-flatbed"></i></div></div>
+                  <div class="content_header">Fournisseurs</div>                
+                  <div class=" hide-tag">Fournisseurs</div>                
+              </div>
+             
+              <div class="header-button fa-linkedin-square" data-id="facturation">
+                  <div class="header-button-icon"><div class="icon_header header-detail"><i class="fa-solid fa-file-lines"></i></div></div>
+                  <div class="content_header">Facturation</div>
+                  <div class="hide-tag">Facturation</div>
+              </div>
+              <div class="header-button link" data-id="designation">
+                  <div class="header-button-icon"><div class="icon_header header-detail"><i class="fa-solid fa-file-signature"></i></div></div>
+                  <div class="content_header">Articles</div>
+                  <div class=" hide-tag">Articles</div>
+              </div>
+              <div class="header-button link " data-id="list">
+                  <div class="header-button-icon"><div class="icon_header header-detail"><i class="fa-solid fa-clipboard-list"></i></div></div>
+                  <div class="content_header">Liste des factures</div>
+                  <div class="hide-tag">Factures</div>
+              </div>
+              <div class="header-button link " data-id="payment">
+                  <div class="header-button-icon"><div class="icon_header header-detail"><i class="fa-solid fa-circle-info"></i></div></div>
+                  <div class="content_header">Liste des paiements</div>
+                  <div class="hide-tag">Paiements  </div>
+              </div>
+              
+              <div class="header-button link" data-id="subscription">
+                  <div class="header-button-icon"><div class="icon_header header-detail"><i class="fa-sharp fa-solid fa-shield"></i></div></div>
+                  <div class="content_header">Abonnements</div>
+                  <div class="hide-tag">Abonnements</div>
+              </div>
+              
+              <div class=" header-title "> ALLER PLUS LOIN</div>
+              <div class="header-button link " data-id="comptes">
+                  <div class="header-button-icon"><div class="icon_header header-detail"><i class="fa-solid fa-user-gear"></i></div></div>
+                  <div class="content_header">Comptes</div>
+                  <div class="hide-tag">Comptes</div>
+              </div>
+              <div class="header-button link " data-id="profil">
+                  <div class="header-button-icon"><div class="icon_header header-detail"><i class="fa-solid fa-address-card"></i></div></div>
+                  <div class="content_header">Profil</div>
+                  <div class="hide-tag">Profil</div>
+              </div>
+          
+            </div>
+          
+        </div>
+
+        <!-- /******************************** Général pages content ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+        
+        <div id="content" class="grid">
+        
+        <!-- /********************************** Header top screen ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+        <div id="top_header" class="top-header-title secondary_color1 d-flex center gap-40" style="padding: 0px 30px; z-index: 1;">
+            <div id="top-header-text" class=" margin-r-auto" style="  padding: 11px;   border: 1px solid #e7e7f3;">
+                <div  class="close_left_bar logo_title cursor"><i class="fa-solid fa-angles-left" style="font-size: 25px; color: #5a7294;"></i></div>
+            </div>
+            <div class="selected_filter box_header" >
+                <select id="company-list" class="filter" type=text value="" placeholder="Toutes les entreprises"style="" > 
+                </select>               
+            </div>
+            <div class="manager_access">
+                <img class="btn_notif" src="img/bell.png"  style="width:20px;height:22px; margin-top: 25px; margin-right: 10px; cursor: pointer;"/> 
+                <div id="notifications_indicator" class="cursor" style="position: relative;top: -35px;right: -10px; "></div>
+                
+                <div class="content_notif absolute btn_dropdown_notif scroll shadow">                 
+                    
+                </div>
+            </div>
+            <div class="d-flex margin-l-auto gap-40">
+                <div class=" top_banner subtitle_small text_right cursor bold d-flex center">
+                
+                    <div class="my_profile d-flex center gap-10 " data-id="dropdown_info">  
+                      
+                        <img class="dropdown_info" height="30px" style="padding:4px;" src="img/settings.png"/>                           
+                        <div  class="dropdown_container shadow text_center">
+                      
+                          <div style="font-size: 20px; font-weight: 500; padding: 15px;">Mon profil</div>
+                          <div id="current_user" class="username bold p-l-r-15p line" style="font-size: 15px; padding: 15px">Sara lekouara</div>
+                        
+                        
+                          
+                          <div id="logOut" class="dropdown_item" style="padding: 15px">
+                              <span class="item">Deconnexion</span>
+                          </div>
+                      
+                         </div> 
+                        <div class="header-admin-image">
+                          <img src="/img/default-user.jpg"/>                           
+                        </div>  
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+        <!-- /********************************** subscription page ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+        
+            <div id="subscription_page" class="page" data-id="subscription">
+                <div class="table grid padding_top15 scroll" style="margin: 2%;">
+
+                    <div class="header_box_content d-flex ">
+                        <div class="selected_filter grid" style="grid-template-columns: 20px 1fr ;"> 
+                            <div class="blod text_color10  margin-auto"> Du</div>
+                            <input id="subscription_start" class="box_input" value="" type="date"  autocomplete="off">
+                        </div>
+                        <div class="selected_filter grid" style="grid-template-columns: 20px 1fr ;"> 
+                            <div class="blod text_color10  margin-auto"> Au</div>
+                            <input id="subscription_end" class="box_input " value="" type="date"  autocomplete="off">
+                        </div>   
+     
+                        <div class="total_box">
+                            
+                        </div>
+                       
+                        <div  class=" w100 text_right" > 
+                            <button id="add_new_subscription">
+                                <span>Ajouter</span>
+                            </button>                    
+                        </div>
+                    </div>
+                  
+                    <div id="table_header" class="line blod text_color1 grid colmn5 secondary_color1 shadow">
+                    
+                        <div>Désignation</div>
+                        <div>Client</div>
+                        <div>Date de début</div>
+                        <div>Date de fin</div>
+                                                
+                        <div></div>                       
+                    </div>
+                    <div id="list_subscription" class="secondary_color1 text_color1 h65 scroll relative loading-placeholder shadow">
+                    
+                    </div>
+                </div>             
+
+            </div>
+        <!-- /********************************** statistique page ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+        
+            <div id="statistique_page" class="page" data-id="statistique">
+                <div class=" box_content grid">
+                    <div class="grid colmn2" style="margin: 10px 20px 0px;">
+                        <div class="selected_filter grid" style="grid-template-columns: 20px 1fr;"> 
+                            <div class="blod text_color7  margin-auto"> Du</div>
+                            <input id="in-date" class="date_input" value="" type="date"  autocomplete="off">
+                        </div>
+                        <div class="selected_filter grid" style="grid-template-columns: 20px 1fr ; "> 
+                            <div class="blod text_color7  margin-auto"> Au</div>
+                            <input id="to-date" class="date_input " value="" type="date"  autocomplete="off">
+                        </div>
+                    </div>
+                    <div id="stat_boxs"  class="grid colmn4 center"  >
+                     
+                    </div>
+
+                    <div id="stat_invoice" class="grid colmn2 m-l-r-20p gap-30">
+
+                    </div>
+                    <div class="table secondary_color1 shadow grid padding_top15 m-b-15 m-r-l-15p m-b-30">
+                        <div class="title_medium text_color1 m-l-10p">Liste des factures non payées</div>
+
+                        <div id="table_header" class="line blod text_color1 grid colmn6 secondary_color1 ">
+                            <div>Numéro</div>
+                            <div>Entreprise</div>
+                            <div>Date de création</div>                        
+                            <div>Total HT</div>                         
+                            <div>TVA</div>                         
+                            <div>total TTC</div>                         
+                        </div>
+                        <div id="facture_list" class="text_color1 loading-placeholder scroll" style="max-height: 400px;">
+                            
+                           
+                        </div>
+                    </div>
+
+
+                </div>                
+
+            </div>
+
+        <!-- /********************************** Dashboard page ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+        
+            <div id='dashboard' class="page" data-id="dashboard">
+                <div class=" box_content grid">
+                    <div id="dash_box" class="grid  center" >
+                     
+                    </div>
+                    <div id="dashboard_data" class="grid colmn3 p-l-r-15p gap-10" style=" margin:3% 5%;">
+                   
+                    </div>
+                    
+                    <div class="table secondary_color1 shadow grid padding_top15 shadow manager_access admin_access " style=" margin:15px;">
+                        <div class="title_medium text_color1 m-l-10p">Liste des devis à confirmer</div>
+
+                        <div id="table_header" class="line blod text_color1 " style="display:grid; grid-template-columns: 20px 1fr 1fr 1fr 1fr 1fr; padding: 1%; ">
+                            <div>#N</div>
+                            <div>Document</div>
+                            <div>Date de création</div>
+                            <div>Commercial</div>                        
+                            <div>Montant HT</div>                        
+                            <div></div>                        
+                        </div>
+                        <div id="invoice_invalid" class="text_color1 loading-placeholder scroll" style="max-height: 400px;">
+                            
+                           
+                        </div>
+                    </div>
+
+                    <div class="table secondary_color1 shadow grid padding_top15 shadow manager_access admin_access " style=" margin:15px;">
+                        <div class="title_medium text_color1 m-l-10p">Liste des devis Déclinés</div>
+
+                        <div id="" class="line blod text_color1 text_center" style="display:grid; grid-template-columns: 20px 1fr 1fr 1fr 1fr; padding: 1%; ">
+                            <div>#N</div>
+                            <div>Document</div>
+                            <div>Date de création</div>
+                            <div>Commercial</div>                        
+                            <div>Montant HT</div>             
+                        </div>
+                        <div id="invoice_declined" class="text_color1 loading-placeholder scroll" style="max-height: 400px;">
+                            
+                           
+                        </div>
+                    </div>
+
+
+                </div>     
+                <div style="height: 30px;">
+
+                </div>           
+
+            </div>
+        <!-- /********************************** Comptes page ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+            <div id='comptes_page' class="page" data-id="comptes" >
+                <div class="table grid padding_top15 scroll" style="margin: 2%;">
+                    <div class="header_box_content d-flex "> 
+                        <div class="title_medium text_color1 padding10"></div>
+                        <div class="selected_filter box w100"> 
+                            
+                        </div>
+                        <div class="selected_filter box w100"> 
+                           
+                        </div>      
+                        <div id="add_new_account"  class="cursor manager_access" > 
+                            <button>
+                                <span>Ajouter</span>
+                            </button>                    
+                        </div> 
+
+                    </div>
+                
+                    <div id="table_header" class="line blod text_color1 grid colmn5 secondary_color1 shadow">
+                    
+                        <div>Photo</div>
+                        <div>Identité</div>
+                        <div>Position</div>
+                        <div>Email</div>                        
+                        <div></div>                       
+                    </div>
+                    <div id="list_account" class="secondary_color1 text_color1 h65 scroll relative loading-placeholder shadow">
+                        
+                    </div>
+                    
+                 
+                </div>
+            </div>
+        <!-- /********************************** liste des commerciaux page ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+            <div id='list_staff_page' class="page" data-id="list_staff" >
+                <div class="table grid padding_top15 scroll" style="margin: 2%;">
+                    <div class="header_box_content d-flex "> 
+                        <!-- <div class="title_medium text_color1 padding10"></div> -->
+                        <div>
+                            <div class="input-group">
+                              <input required="" type="text" name="text" autocomplete="off" class="input search_bar">
+                              <label class="user-label">Recherche</label>
+                            </div>
+                        </div>
+                        <div class="selected_filter box"> 
+                            <select class="content_editable filter_wilaya"  data-id="wilaya" contenteditable="true">
+                                <option value = "">Toutes les wilayas</option>
+                                <option value = "Adrar">Adrar</option>
+                                <option value = "Oum El Bouaghi">Oum El Bouaghi</option>
+                                <option value = "Batna">Batna</option>
+                                <option value = "Bejaia">Bejaia</option>
+                                <option value = "Biskra">Biskra</option>
+                                <option value = "Bechar">Bechar</option>
+                                <option value = "Blida">Blida</option>
+                                <option value = "Bouira">Bouira</option>
+                                <option value = "Tamanrasset">Tamanrasset</option>
+                                <option value = "Tebessa">Tebessa</option>
+                                <option value = "Tlemcen">Tlemcen</option>
+                                <option value = "Tiaret">Tiaret</option>
+                                <option value = "Tizi Ouzou">Tizi Ouzou</option>
+                                <option value = "Alger">Alger</option>
+                                <option value = "Djelfa">Djelfa</option>
+                                <option value = "Jijel">Jijel</option>
+                                <option value = "Setif">Setif</option>
+                                <option value = "Saida">Saida</option>
+                                <option value = "Skikda">Skikda</option>
+                                <option value = "Sidi Bel Abbes">Sidi Bel Abbes</option>
+                                <option value = "Annaba">Annaba</option>
+                                <option value = "Guelma">Guelma</option>
+                                <option value = "Constantine">Constantine</option>
+                                <option value = "Medea">Medea</option>
+                                <option value = "Mostaganem">Mostaganem</option>
+                                <option value = "MSila">MSila</option>
+                                <option value = "Mascara">Mascara</option>
+                                <option value = "Ouargla">Ouargla</option>
+                                <option value = "Oran">Oran</option>
+                                <option value = "El Bayadh">El Bayadh</option>
+                                <option value = "Illizi">Illizi</option>
+                                <option value = "Bordj Bou Arreridj">Bordj Bou Arreridj</option>
+                                <option value = "Boumerdes">Boumerdes</option>
+                                <option value = "El Tarf">El Tarf</option>
+                                <option value = "Tindouf">Tindouf</option>
+                                <option value = "Tissemsilt">Tissemsilt</option>
+                                <option value = "El Oued">El Oued</option>
+                                <option value = "Khenchela">Khenchela</option>
+                                <option value = "Souk Ahras">Souk Ahras</option>
+                                <option value = "Tipaza">Tipaza</option>
+                                <option value = "Mila">Mila</option>
+                                <option value = "Ain Defla">Ain Defla</option>
+                                <option value = "Naama">Naama</option>
+                                <option value = "Ain Temouchent">Ain Temouchent</option>
+                                <option value = "Ghardaia">Ghardaia</option>
+                                <option value = "Relizane">Relizane</option>
+                            </select>
+                            
+                        </div>
+                        
+                        <div  class="  w100 text_right" > 
+                            <button id="more_detail_commercial" style="background-image: linear-gradient(98.69deg,#ff8ea5 -32.8%,#e94e6e 153.9%);">
+                                <span>Voir plus</span>
+                            </button>                    
+                        </div> 
+
+                    </div>
+                
+                    <div id="table_header" class="line blod text_color1 grid colmn5 secondary_color1">
+                    
+                        <div>Photo</div>
+                        <div>Identité</div>
+                        <div>Sécteur</div>                        
+                        <div>Total Factures</div>                       
+                        <div>Chiffre d'affaires</div>                 
+                    </div>
+                    <div id="list_commerciaux" class="secondary_color1 text_color1 h65 scroll relative loading-placeholder shadow">
+                        
+                    </div>
+                    
+                 
+                </div>
+            </div>
+        <!-- /********************************** crm page ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+            <div id='fournisseur_page' class="page" data-id="fournisseur" >
+                <div class="table grid padding_top15 scroll" style="margin: 2%;">
+                    <div class="header_box_content d-flex "> 
+                        
+                        <div>
+                            <div class="input-group">
+                              <input required="" type="text" name="text" autocomplete="off" class="input search_bar">
+                              <label class="user-label">Recherche</label>
+                            </div>
+                        </div>
+                        
+                        <div  class="  w100 text_right" > 
+                            <button id="add_new_folder">
+                                <span>Ajouter</span>
+                            </button>                    
+                        </div> 
+                    </div>
+                
+                    <div id="table_header" class="line blod text_color1 grid colmn5 secondary_color1 shadow">
+                    
+                        <div>Nom</div>
+                        <div>Secteur d'activité</div>
+                        <div>Catégorie</div>
+                        <div>coordonnées fiscales</div>
+                                                
+                        <div></div>                       
+                    </div>
+                    <div id="list_fournisseur" class="list_folders secondary_color1 text_color1 h65 scroll relative loading-placeholder shadow">
+                        
+                    </div>
+                    
+                 
+                </div>
+            </div>
+        <!-- /********************************** crm page ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+            <div id='crm_page' class="page" data-id="crm" >
+                <div class="table grid padding_top15 scroll" style="margin: 2%;">
+                    <div class="header_box_content d-flex "> 
+                        <div class="title_medium text_color1 ">
+                            <img src="img/search.png" class="search_box shadow cursor secondary_color1 " height="50px">
+                        </div>
+                        
+                        <div>
+                            <div class="input-group">
+                              <input required="" type="text" name="text" autocomplete="off" class="input search_bar">
+                              <label class="user-label">Recherche</label>
+                            </div>
+                        </div>
+                        <div class="selected_filter box"> 
+                            <select id="filter_clients" class="filter" type=text value="" placeholder="Toutes les entreprises"> 
+                                <option value="">Toutes les entreprises</option>
+                                <option value="Prospect">Prospect</option>
+                                <option value="Client">Client</option>                        
+                            </select>
+                            
+                        </div>
+                        <div  class="  w100 text_right" > 
+                            <button id="add_new_folder">
+                                <span>Ajouter</span>
+                            </button>                    
+                        </div> 
+                    </div>
+                
+                    <div id="table_header" class="line blod text_color1 grid colmn5 secondary_color1 shadow">
+                    
+                        <div>Nom</div>
+                        <div>Secteur d'activité</div>
+                        <div>Catégorie</div>
+                        <div>coordonnées fiscales</div>
+                                                
+                        <div></div>                       
+                    </div>
+                    <div id="list_folders" class="list_folders secondary_color1 text_color1 h65 scroll relative loading-placeholder shadow">
+                        
+                    </div>
+                    
+                 
+                </div>
+            </div>
+        <!-- /********************************** payment page ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+            <div id='payment_page' class="page" data-id="payment" >
+                    <div class="table grid padding_top15 scroll" style="margin: 2%;">
+                        <div id="list_payment_filters" class="header_box_content d-flex "> 
+                            
+                            
+                        </div>
+                        <div id="table_header" class="line blod text_color1 grid colmn7 secondary_color1 shadow">
+                        
+                            <div>Client</div>
+                            <div>Facture N°</div>
+                            <div>Total TTC</div>
+                            <div>Montant du paiement</div>                                                    
+                            <div>Reste</div>                                                    
+                            <div>Statut</div>                       
+                            <div>Enregistré le</div>                       
+                        </div>
+                        <div id="payment_content" class="secondary_color1 text_color1 h65 scroll relative loading-placeholder shadow">
+                        
+                        </div>
+                    </div>
+            </div>
+        <!-- /********************************** profile page ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+            <div id='profile_page' class="page" data-id="profil" >
+                    <div class="table grid padding_top15 scroll " style="margin: 2%;">
+                        <div  class=" w100 text_right" > 
+                            <button id="add_new_profil" class="manager_access">
+                                <span>Ajouter</span>
+                            </button>                    
+                        </div>
+                        <div id="table_header" class="line blod text_color1 grid colmn4 secondary_color1 shadow">
+                        
+                            <div>logo</div>
+                            <div>Raison social</div>
+                            <div>Dénomination</div>
+                                                    
+                            <div></div>                       
+                        </div>
+                        <div id="profil_content" class="secondary_color1 text_color1 h65 scroll relative loading-placeholder shadow">
+                        
+                        </div>
+                    </div>
+            </div>
+        <!-- /********************************** list page ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+            <div id='list_page' class="page" data-id="list" >
+                <div class="table grid padding_top15 scroll" style="margin: 2%;">
+
+                    <div id="list_invoice_filters" class="header_box_content d-flex "> 
+                    </div>
+                    <div id="table_header" class="line blod text_color1 grid colmn7 secondary_color1 shadow">
+                    
+                        <div>Client</div>
+                        <div>Statut</div>
+                        <div>N°</div>
+                        <div>Date d'émission</div>
+                        <div>Délai de paiement</div>
+                        <div>Total TTC</div>
+                                                
+                        <div></div>                       
+                    </div>
+                    <div id="invoices" class="secondary_color1 text_color1 h65 scroll relative loading-placeholder shadow">
+                    
+                    </div>
+                    <div id="cercle" style="background-color:#e94e6e ; top: 10px !important; margin-left: 10px !important;"></div><div class="bold text_color3" style="font-size: small; margin: -5px 35px 0px;">Facture ayant dépassée le délai de paiement </div>
+
+                </div>
+            </div>
+        <!-- /********************************** profile page ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+            <div id='designation_page' class="page" data-id="designation" >
+                    <div class="table grid padding_top15 scroll" style="margin: 2%;">
+                        <div  class=" w100 text_right" > 
+                            <button id="add_new_designation">
+                                <span>Ajouter</span>
+                            </button>                    
+                        </div>
+                        <div id="table_header" class="line blod text_color1 grid colmn5 secondary_color1 shadow">
+                        
+                            <div>Articles</div>
+                            <div>PU / HT</div>
+                            <div>référence</div>
+                            <div>Unité</div>
+                                                    
+                            <div></div>                       
+                        </div>
+                        <div id="designation_content" class="secondary_color1 text_color1 h65 scroll relative loading-placeholder shadow">
+                        
+                        </div>
+                    </div>
+            </div>
+        <!-- /********************************** facturation page ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+                  
+        <div id='facturation_page' class="page" data-id="facturation"style="grid-template-rows: 0.1fr 1fr; " >
+            <div class="secondary_color1 shadow d-flex place_center gap-10" style="margin: 15px;padding: 15px;">   
+                <!-- <div data-type="Facture" class="btn_type btn_facturation ">Facture</div> -->
+                <div data-type="Facture_proforma" class="btn_type btn_facturation btn_type_selected btn_nav_devis">Facture proforma</div>
+                <div data-type="Bon_de_commande" class="btn_type btn_facturation btn_nav_bon">Bon de commande</div>
+                <div data-type="Facture_d_avoir" class="btn_type btn_facturation btn_nav_bon">Facture d'avoir</div>
+             
+            </div>
+
+            <div class="grid" style="grid-template-columns: 1fr 40vw ;">
+                            <!--  /********************************** Facture ***************************************************************/ -->
+            <div id="facture_page" class="facturation_content secondary_color1 shadow padding_top15 m-10p padding15">          
+                <header>
+                    <h1 class="title_type line"> </h1>
+                </header>
+               
+                <div id="facturation_form" class="facturation_form">
+                    <div class="selected_filter_doc box w100"> 
+                        <div class="label">Sélectionnez un client*</div>
+                        <div class="grid" style="grid-template-columns: 1fr 0.5fr;">
+                            <input id="input_company" class="content_editable filter_clients"  type="text" list="search-company" placeholder="Sélectionner client">            
+                           
+                            <datalist  class="filter filter_clients" data-id="id_folder" type=text value="" id="search-company" placeholder="">
+                                <option value=""></option>
+                            </datalist>
+                            
+                            <div id="add_new_folder" data-id="selected_dispaly" class="btn_facturation_add cursor">Ajouter</div> 
+                        </div>
+                   
+                        <div class="message_not_find" style="color: #ff506d; text-align: start;">L'entreprise n'éxiste pas </div>
+
+                    </div>
+                    
+                    <div id="filter_operations" class="selected_filter_doc box w100"> 
+                        <div class="label">Sélectionner l'opération*</div>
+                        
+                        <div class="grid" style="grid-template-columns: 1fr 0.5fr;" >
+                            <select class="filter filter_operations" data-id="id_operation" type=text value="" placeholder="Toutes les entreprises"> 
+                    
+                            </select>  
+                            <div id="add_new_operation_facturation" data-id="selected_dispaly" class="btn_facturation_add cursor" >Ajouter</div> 
+                        </div>                        
+                    </div> 
+                </div>
+                <div class="number_facture facturation_label" >
+                    <div class="label"> N° de l'ancienne facture *</div>
+                    <input id="number_facture" class="content_editable" type="text">
+                </div>
+                <!-- <div class="number_bon facturation_label" >
+                    <div class="label"> N° du bon de commande *</div>
+                    <input id="number_bon" class="content_editable" type="text">
+                </div> -->
+                <div class="designation_section facturation_form">
+                    <div class="label"># Sélectionner un article</div>
+                   
+                    <div class="selected_filter_doc box w10 margin_top100">                       
+                        <div class="grid" style="grid-template-columns: 1fr 0.5fr;">
+                            <select class="filter filter_items" type=text value="" > 
+                        
+                            </select>   
+                            <div id="add_new_designation" data-id="selected_dispaly" class="btn_facturation_add cursor">Ajouter</div> 
+                        </div>                      
+
+                    </div>
+                    <div id="articles_section" class="grid" > 
+
+                    </div>
+                    
+                </div>
+                <div class="facturation_label">
+                    <div class="label">Date d'émission </div>
+                    <input  id="date_issue" class="onlyNumber content_editable" type="date" style="margin: 5px; ">
+                </div>
+                <div class="facturation_label">
+                    <div class="label">Escompte</div>
+                    
+                    <div class="grid colmn2 facturation_form gap-10">
+                   
+                        <div class="box"> 
+                          <select id="escompte_unity" type="text" class="type_escompte" > 
+                              <option value="DA">DA</option>
+                              <option value="%">%</option>                        
+                          </select>
+                        </div>      
+                        
+                        <input  id="escompte_file" class="onlyNumber content_editable" type="number"  value="0" style="margin: 5px; ">
+                      
+                    </div>                        
+                
+                </div>
+                <div class="facturation_label">
+                    <div class="label">TVA </div>
+                    <input  id="tva_value" class="onlyNumber content_editable" type="number"  value="19" style="margin: 5px; ">
+                </div>
+                <div class="facturation_label">
+                    <div class="label">Notes complémentaires</div>
+                    <div id="editor" class="description_file content_editable" style="margin: 0px !important;">
+                        <p>Merci</p>
+
+                        <p><br></p>
+                    </div>
+                </div>
+
+             
+<!--                   
+                <div class="facturation_label">
+                    <div class="label">Délai de paiement</div>
+                     
+                    <div class="grid colmn2 facturation_form gap-10">
+                   
+                        <div class="box"> 
+                          <select id="" type="text" class="deadline_time" > 
+                              <option value="1">Un mois</option>
+                              <option value="2">Deux mois</option>                        
+                              <option value="3">Trois mois</option>                        
+                              <option value="4">Quatre mois</option>                        
+                              <option value="5">Cinq mois</option>                        
+                              <option value="6">Six mois</option>                        
+                              <option value="7">Sept mois</option>                        
+                              <option value="8">Huit mois</option>                        
+                              <option value="9">Neuf mois</option>                        
+                              <option value="10">dix mois</option>                        
+                              <option value="11">Onze mois</option>                        
+                              <option value="12">Douze mois</option>                        
+                              <option value="0">Spécifier le délai de la date</option>                        
+                          </select>
+                        </div>      
+                        <input  id="payment_deadline" class="onlyNumber content_editable" type="date" style="margin: 5px; ">
+                    </div>  
+                </div> -->
+
+                <input id='total_file' class="onlyNumber content_editable" type="hidden" style="margin: 5px; ">
+
+                <div style="height: 50px;"></div>
+                <div class="message_error center">Veuillez renseigner le client et/ou l'opération du client *</div>
+
+                
+
+                <div class="grid colmn1 btn_files" >
+                
+                </div>
+               
+                
+
+            </div>
+            <div id="invoice_show" class=" secondary_color1 shadow grid  m-10p " style=" height:75vh;"> 
+
+
+            </div>
+
+            </div>
+
+
+        </div>
+ 
+     
+     
+        </div>
+     
+    </div>
+    <table id="download_list">
+
+        
+    </table>
+
+    <div class="pdfnone">
+        <div id="id_pdf">
+            <div id="pdf" class="pdf">
+                
+    
+            </div>                
+            <div class="html2pdf__page-break">
+                
+            </div>
+
+        </div>
+    </div>
+
+    <div id="search_content">
+        <div id="search_bar" class="gap-10">
+            <img src="img/search.png" height="30px" style="margin: 10px 5px;">
+            <input id="search_file"  type="text"  placeholder="Recherche par numéro">
+            <input id="search_name"  type="text"  placeholder="Recherche par entreprise">
+            <div class="selected_file w100"> 
+                <select id="filter_fils" class="filter" type=text value="" placeholder="Tous les documents"> 
+                    <option value="">Tous les documents</option>
+                    <option value="Facture">Facture</option>
+                    <option value="Facture_proforma">Facture proforma</option>
+                    <option value="Bon_de_commande">Bon de commande</option>
+                    <option value="Facture_d_avoir">Facture d'avoir</option>
+            
+                </select>
+            </div>
+            <div class="grid" style="grid-template-columns: 50px 1fr ;">
+                <div class="bold margin-auto p-r-8"> Du</div>
+                <input id="in_date" class="search_date" type="date"> </input>       
+            </div>
+            <div class="grid" style="grid-template-columns: 50px 1fr ;">
+                <div class="bold margin-auto p-r-8"> Au</div>
+                <input id="to_date" class="search_date" type="date"> </input>     
+            </div>
+            <div></div>
+        </div>
+        
+        <div id="search_results">
+
+        </div>
+
+    </div>
+    
+
+    <table id="download_list">
+
+        
+    </table>
+    
+    
+    <!-- <img id="image" style=" border: 1px solid red; "></img>   -->
+     <!-- The success Modal -->
+        <div class="waiting-popup">
+            <div class="spinner"></div>
+        </div>
+        <div class="popup_detail_account">
+            <div class="popup_detail_content grid">
+                
+            </div>
+
+        </div>
+
+        <div class="popup">
+            <div class="popup-content shadow">
+                <div class="SucessContainer">
+                    <div class="w3-modal-icon w3-modal-success animate">
+                        <span class="w3-modal-line w3-modal-tip animateSuccessTip"></span>
+                        <span class="w3-modal-line w3-modal-long animateSuccessLong"></span>
+                        <div class="w3-modal-placeholder"></div>
+                        <div class="w3-modal-fix"></div>
+                    </div>
+                </div>
+                <h5 class="message"></h3>
+                <div class="popup_footer">                        
+                    <div class="btn btn-outline-success ok" style="font-weight: 600;"> Ok </div>
+                </div>
+            </div>
+        </div>
+        <div class="popup_alert" style=" z-index: 1000;">
+            <div class="popup-content shadow">
+                <!-- <div class="mover"></div> -->
+                <img src="/img/warning.png" style="height: 75px;">
+                <h5 class="message_alert" > Le montant de ce document est important et doit être soumis à une validation par un manager </h3>
+                <div class="popup_footer">                        
+                    <div class="btn btn-outline-success ok" style="font-weight: 600; color: #1b2045;"> Ok </div>
+                </div>
+            </div>
+        </div>
+        <div class="popup2" >
+            <div class="popup-content">
+                <h5 class="message"></h3>
+                    <div class="popup_footer">                        
+                        <div class="btn btn-outline-success closed" >
+                        <i class="far fa-check-circle"></i> Ok </div>
+                    </div>
+            </div>
+        </div>
+
+        <div class="container_expended">
+            <span class="closebtn">&times;</span>
+            <img id="expandedImg" style="widows: 70%">
+          </div>
+          
+        <div id="overlay"></div>   
+        <div id="overlayTop"></div>   
+
+        <div class="modal_details">
+            <div class="modal-dialog_details">
+                <div class="header_modal"> </div>
+            
+
+            </div>
+        </div> 
+
+        <div id="print_list"> </div>
+        <div class="hide"><div id="print_badge" class="grid colmn2 "> </div></div>        
+
+        <div id="makepdf" class="modal_add">
+            <div class="modal-content">
+                <h5>Êtes-vous sur de vouloir ajouter cette company ?</h3>
+                    <div class="modal_footer">
+                        <div class="supprimer btn btn-outline-danger red"  id='valid_not'><i class="far fa-times-circle"></i> Non </div>
+                        <div class="btn btn-outline-success green" id='add_company_valid_confirm'><i class="far fa-check-circle"></i> Oui </div>
+                    </div>
+            </div>
+        </div>
+
+
+        <div><svg class="hide"  id="barcode" ></svg></div>
+        
+        <img class="hide"  id="image" ></img>
+        <div id="side_menu" class="grid row3 secondary_color1 text_color3" style="box-shadow: 2px 2px 10px rgb(0 121 255 / 54%);">
+                   
+        </div>   
+        <div id="side_menu_container" class="grid row3 secondary_color1 text_color3" style="box-shadow: 2px 2px 10px rgb(0 121 255 / 54%);">
+                   
+        </div>   
+        <div id="connection_status" class="shadow raduis padding30 ">
+            <div class="block bold text_red title_bg"> Probléme de connexion à internet</div>
+            <div class="block subtitle_small bold gray_color"> Veuilliez vérifier votre connexion internet</div>
+        </div>
+      
+    
+    <!-- Include the Quill library -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+    <!-- Initialize Quill editor -->
+    <script>
+    var toolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+
+        [{ 'header': 1 }, { 'header': 2 }],               // custom button values
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+        // [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+        // [{ 'font': [] }],
+        [{ 'align': [] }],
+
+        ['clean']                                         // remove formatting button
+        ];
+
+        var quill = new Quill('#editor', {
+        modules: {
+            toolbar: toolbarOptions
+        },
+        theme: 'snow'
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" ></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="/js/general_function.js"></script>
+    <script src="js/socket.io.js"></script>
+    <script src="js/admin.js"></script>
+    
+</body>
+</html>

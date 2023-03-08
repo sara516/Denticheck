@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+        <title>Administration | Denticheck</title>
+        <base href="/">
+        <link rel="icon" type="image/png" href="img/logo.png" />
+    
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/placeholder-loading/dist/css/placeholder-loading.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+
+        <link rel="stylesheet" href="css/general_style.css">
+        
+        <link rel="stylesheet" href="css/administration.css">
+        <script src="https://docraptor.com/docraptor-1.0.0.js"></script>
+        <script src="https://cdn.lordicon.com/xdjxvujz.js"></script>
+    
+        <script src=" https://printjs-4de6.kxcdn.com/print.min.js"></script>
+        <link href=" https://printjs-4de6.kxcdn.com/print.min.css" rel="stylesheet">
+        <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+    
+    </head>
+
+<body>
+
+        <!-- /////////////////////////////////////////////////////////////
+        //! /////////////////!  LOADING PAGE   //////////////////////////
+        //! /////////////////!///////////////////////////////////////////!-->
+
+        <div id="loading_page" >
+            <div class="loader-box">
+                <div class="loading-wrapper">
+                    <div class="loader">
+                        <div class="loader-inner">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="body" class="grid">
+
+        <!-- /********************************** Header left screen ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+        <div id="header" class=" text_left"  >
+            <div id="">
+                <div id="header-logo-container">
+                    <img id="header-logo" src="/img/logo.png">
+                </div>
+            </div>
+            <div class="header" >
+          
+              <div class="header-button link selected_link" data-id="dashboard" >
+                  <div class="header-button-icon"><div class="icon_header header-detail"><i class="fa-solid fa-gauge-high"></i></div></div>
+                  <div class=" hide-tag header-tag">Dashboard</div>
+              </div>
+              <div class="header-button link" data-id="centres_page">
+                <div class="header-button-icon"><div class="icon_header header-detail"><i class="fa-solid fa-house"></i></div></div>
+                <div class="hide-tag header-tag">Centres</div>
+              </div>
+              <div class="header-button link" data-id="document">
+                <div class="header-button-icon"><div class="icon_header header-detail"><i class="fa-solid fa-paste"></i></div></div>
+                <div class="hide-tag header-tag">Documents</div>
+              </div>
+              <div class="header-button link" data-id="users">
+                <div class="header-button-icon"><div class="icon_header header-detail"><i class="fa-solid fa-users"></i></div></div>
+                <div class="hide-tag header-tag">Administrateurs</div>
+              </div>
+              <div class="header-button link" data-id="setting">
+                <div class="header-button-icon"><div class="icon_header header-detail"><i class="fa-solid fa-sliders"></i></div></div>
+                <div class="hide-tag header-tag">Paramètres</div>
+              </div>
+              <div class="header-button link" data-id="list_staff">
+                <div id="logOut"  class="header-button-icon"><div class="icon_header header-detail"><i class="fa-solid fa-power-off"></i></div></div>
+                <div class="hide-tag header-tag">Déconnexion</div>
+              </div>
+              
+            </div>
+          
+        </div>
+
+        <!-- /******************************** Général pages content ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+        
+        <div id="content" class="grid">
+        
+        <!-- /********************************** Header top screen ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+        <div id="top_header" class="top-header-title secondary_color1 d-flex center gap-40" style="padding: 0px 30px; z-index: 1;">
+            <div id="top-header-text" class=" margin-r-auto" >
+                
+            </div>
+            <div id="current_profil" class="d-flex margin-l-auto gap-40">
+        
+            </div>
+    
+        </div>
+        <!-- /********************************** Dashboard page ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+        
+            <div id='dashboard' class="page" data-id="dashboard">
+                         
+            </div>     
+
+        <!-- /********************************** Centres page ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+
+            <div id='centres_page' class="page" data-id="centres_page">
+                <div class="d-flex flex_colmn margin20" >
+                    <div class="bold" style="font-size: 25px;">Centres</div>
+                    <div class="d-flex justify-between">
+                        <div class="bold" style="font-size: 15px;">Liste des centres</div>
+                        <div class="flex_content">
+                            <div class="w100">
+                                <div class="input-group">
+                                    <input required="" type="text" name="text" autocomplete="off" class="input search_bar">
+                                    <label class="user-label">Recherche</label>
+                                </div>
+                            </div>
+                        </div>
+                       
+                    </div>
+                    <div id="list_centres" class="d-flex margin_top20  h65 scroll loading-placeholder"  style="flex-wrap: wrap;gap: 20px;"> 
+                        <div class="centre_card">
+                            <div class="title_small"> Centre N°1</div>
+                            <div class="subtitle_small" style="padding:10px 0px"> Centre dentaire paris 17 champerret</div>
+                            <div>
+                                <div class="subtitle_small bold"> Responsable de centre</div>
+                                <div class="subtitle_small">Rima picot</div>
+    
+                            </div>
+
+                        </div>
+                        <div class="centre_card">
+                            <div class="title_small"> Centre N°1</div>
+                            <div class="subtitle_small" style="padding:10px 0px"> Centre dentaire paris 17 champerret</div>
+                            <div>
+                                <div class="subtitle_small bold"> Responsable de centre</div>
+                                <div class="subtitle_small">Rima picot</div>
+    
+                            </div>
+                            <i class="fa-solid fa-circle-exclamation problem_icon"></i>
+
+                        </div>
+                        <div class="centre_card">
+                            <div class="title_small"> Centre N°1</div>
+                            <div class="subtitle_small" style="padding:10px 0px"> Centre dentaire paris 17 champerret</div>
+                            <div>
+                                <div class="subtitle_small bold"> Responsable de centre</div>
+                                <div class="subtitle_small">Rima picot</div>
+    
+                            </div>
+
+                        </div>
+                        <div class="centre_card">
+                            <div class="title_small"> Centre N°1</div>
+                            <div class="subtitle_small" style="padding:10px 0px"> Centre dentaire paris 17 champerret</div>
+                            <div>
+                                <div class="subtitle_small bold"> Responsable de centre</div>
+                                <div class="subtitle_small">Rima picot</div>
+    
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>     
+        
+
+        <!-- /********************************** details cente page ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+        <div id='centre_page' class="page" data-id="centre_page">
+            <div class="d-flex flex_colmn padding20" >
+                <div class="d-flex  justify-between">
+                    <div class="d-flex gap10 center ">
+                        <i class="fa-solid fa-arrow-left " style="font-size: 22px;"></i>
+                        <div class="bold" style="font-size: 25px;">Détails du centre</div>   
+                    </div> 
+                    <i class="fa-solid fa-circle-info "></i>
+
+                </div>
+                <div class="d-flex flex_colmn" style="padding:20px 0px">
+                    <div class="bold" style="font-size: 15px">Centre N°1 </div>
+                    <div> Centre dentaire paris champerret </div>
+                </div>
+            </div>
+
+            <div id="" class="d-flex margin_top20 scroll loading-placeholder "  style="flex-wrap: wrap;gap: 30px;place-content: center;"> 
+                <div class="card">
+                    <div class="grid center" style="width: 40px;height: 40px; border-radius: 50%;background-color: rgb(0, 200, 255);color: white;">
+                        <i class="fa-solid fa-hospital"></i>
+                    </div>
+                    <div style="padding: 10px 0px">
+                        <div class="bold small_title"  style="font-size: 24px;">09</div>
+                        <div style="color: #a2a2a2;">Salles</div>
+    
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="grid center" style="width: 40px;height: 40px; border-radius: 50%;background-color: rgb(0, 200, 255);color: white;">
+                        <i class="fa-solid fa-hospital"></i>
+                    </div>
+                    <div style="padding: 10px 0px">
+                        <div class="bold big_title" style="font-size: 24px;">09</div>
+                        <div style="color: #a2a2a2;">Assistants</div>
+    
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="grid center" style="width: 40px;height: 40px; border-radius: 50%;background-color: rgb(255, 157, 0);color: rgb(255, 255, 255);">
+                        <i class="fa-solid fa-exclamation"></i>
+                    </div>
+                    <div style="padding: 10px 0px">
+                        <div class="bold small_title" style="font-size: 24px;">02</div>
+                        <div style="color: #a2a2a2;">Problemes signalés</div>
+    
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="d-flex flex_colmn" style="padding:20px 0px">
+                <div class="bold" style="font-size: 15px">Liste des salles </div>
+            </div>
+
+            <div id="list_rooms" class="d-flex margin_top20 scroll loading-placeholder padding20 "  style="flex-wrap: wrap;gap: 30px;"> 
+                <div class="card">
+                    <div class="bold" style="font-size: 15px;">Cabinet N°1</div>
+                    <div style="padding: 10px 0px">
+                        <div style="font-size: 12px;color: #b1b1b1;">Dernière tâche effetuée</div>
+                        <div style="color: #00a2ff;">Aujourd'hui à 12H00</div>
+                    </div>
+                    <div style="padding: 5px 0px">
+                        <div style="font-size: 12px;color: #b1b1b1;">Effetuée par</div>
+                        <div style="color: #3f3f3f;">Rima picot</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="bold" style="font-size: 15px;">Cabinet N°1</div>
+                    <div style="padding: 10px 0px">
+                        <div style="font-size: 12px;color: #b1b1b1;">Dernière tâche effetuée</div>
+                        <div style="color: #00a2ff;">Aujourd'hui à 12H00</div>
+                    </div>
+                    <div style="padding: 5px 0px">
+                        <div style="font-size: 12px;color: #b1b1b1;">Effetuée par</div>
+                        <div style="color: #3f3f3f;">Rima picot</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="bold" style="font-size: 15px;">Cabinet N°1</div>
+                    <div style="padding: 10px 0px">
+                        <div style="font-size: 12px;color: #b1b1b1;">Dernière tâche effetuée</div>
+                        <div style="color: #00a2ff;">Aujourd'hui à 12H00</div>
+                    </div>
+                    <div style="padding: 5px 0px">
+                        <div style="font-size: 12px;color: #b1b1b1;">Effetuée par</div>
+                        <div style="color: #3f3f3f;">Rima picot</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="bold" style="font-size: 15px;">Cabinet N°1</div>
+                    <div style="padding: 10px 0px">
+                        <div style="font-size: 12px;color: #b1b1b1;">Dernière tâche effetuée</div>
+                        <div style="color: #00a2ff;">Aujourd'hui à 12H00</div>
+                    </div>
+                    <div style="padding: 5px 0px">
+                        <div style="font-size: 12px;color: #b1b1b1;">Effetuée par</div>
+                        <div style="color: #3f3f3f;">Rima picot</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="bold" style="font-size: 15px;">Cabinet N°1</div>
+                    <div style="padding: 10px 0px">
+                        <div style="font-size: 12px;color: #b1b1b1;">Dernière tâche effetuée</div>
+                        <div style="color: #00a2ff;">Aujourd'hui à 12H00</div>
+                    </div>
+                    <div style="padding: 5px 0px">
+                        <div style="font-size: 12px;color: #b1b1b1;">Effetuée par</div>
+                        <div style="color: #3f3f3f;">Rima picot</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-between" style="padding:20px 0px">
+                <div>
+                    <div class="bold" style="font-size: 15px">Mesures correctrices </div>
+                    <div  style="font-size: 12px">Le jeudi 12 janvier 2023 </div>
+    
+                </div>
+                <div>
+                    <button id="">
+                        <span>Ajouter</span>
+                    </button>          
+                </div>
+            </div>
+
+            <div id="corrective_measures_container" class="d-flex margin_top20 scroll loading-placeholder padding20 "  style="flex-wrap: wrap;gap: 30px;"> 
+                <div class="d-flex">
+                    <div class="bold">Tous(20)</div>
+                </div>
+            </div>
+
+
+
+        </div>     
+
+        <!-- /********************************** Parametre page ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+        
+            <div id='setting' class="page" data-id="setting"> 
+               <div class="grid" style="grid-template-columns: 0.25fr 1fr ;">
+                    <div class="secondary_color2 shadow">
+                        <div class="d-flex flex_colmn margin20" >
+                            <div class="bold center text_center" style="font-size: 20px;">Paramètres</div>
+                        </div>
+                        <div class="d-flex flex_colmn text_left" >
+                            
+                            <div class="bold cursor setting_btn general-setting" data-id="general-setting" >Paramètres généraux</div>
+                            <div class="bold cursor setting_btn " data-id="invoice-setting">Paramètres de facturations</div>
+
+                        </div>
+                    </div>
+                    <div id="general-setting" class="" style="margin: 2%">
+                        
+                        <div class="d-flex justify-between">
+                            <div class="bold" style="font-size: 15px;">Liste des tâches par défaut</div>
+                            <div class="flex_content">
+                                <div class="w100">
+                                    <div class="input-group">
+                                        <input required="" type="text" name="text" autocomplete="off" class="input search_bar">
+                                        <label class="user-label">Recherche</label>
+                                    </div>
+                                </div>
+                                <div  class="w100" > 
+                                    <button id="">
+                                        <span>Ajouter</span>
+                                    </button>                    
+                                </div>
+                            </div>                        
+                        </div> 
+                        <div class="table grid padding_top15 scroll m-b-20">
+                            <div id="" class=" blod text_color1 grid colmn4 margin20 center ">
+                                
+                                <div>Nom de la liste</div>
+                                <div>Crée par </div>
+                                <div>Date</div>         
+                                <div></div>                       
+                            </div>
+                            <div id="list_tasks" class="list_folders text_color1 scroll relative center" style="max-height: 30vh ;">
+                                
+                            </div>
+                        </div>
+                        <div class="d-flex justify-between">
+                            <div class="bold" style="font-size: 15px;">Paramètre de grille ARS</div>
+                            <div class="flex_content">
+                                <div class="w100">
+                                    <div class="input-group">
+                                        <input required="" type="text" name="text" autocomplete="off" class="input search_bar">
+                                        <label class="user-label">Recherche</label>
+                                    </div>
+                                </div>
+                                <div  class="w100" > 
+                                    <button id="">
+                                        <span>Ajouter</span>
+                                    </button>                    
+                                </div>
+                            </div>                        
+                        </div> 
+                        <div class="table grid padding_top15 scroll">
+                            <div id="" class=" blod text_color1 grid colmn4 margin20 center ">
+                               
+                                <div>Grille ARS</div>
+                                <div>Crée par </div>
+                                <div>Date</div>         
+                                <div></div>                       
+                            </div>
+                            <div id="" class="list_folders text_color1  scroll relative center" style="max-height: 30vh;">
+                                <div  class="table_items grid colmn4 padding_top15 text_color1 center ">
+                                    <div class=" text_color3">Fiche cabinet</div>       
+                                    <div class=" text_color10">Denticheck</div>      
+                                    <div class=" text_color10">12/12/22</div> 
+                                   <div>
+                                      <div class="dropdown">
+                                        <i class="fas fa-ellipsis-v dropbtn dropbtn_folder"  style="font-size: 20px;padding: 10px;"></i>
+                                        <div id="myDropdown_folder_${subscription.id}" class="dropdown-content">
+                                        <div class="action" id="edit_subscription"><i class="fa-solid fa-info light_grey padding5"></i>Modifier</div>
+                                        <div class="action" id="delete_subscription"><i class="fas fa-trash-alt light_grey padding5"></i>Supprimer</div>
+                                      </div>
+                                    </div>
+                                  </div>  
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div id="invoice-setting" style="margin: 2%">
+                        <div class="d-flex justify-between">
+                            <div class="bold" style="font-size: 25px;">Facturation</div>
+                            <div class="flex_content">
+                               
+                                <div  class="w100" > 
+                                    <button id="" class="second_button">
+                                        <span>Imprimer</span>
+                                    </button>                    
+                                </div>
+                                <div  class="w100" > 
+                                    <button id="" class="second_button">
+                                        <span>Télécharger</span>
+                                    </button>                    
+                                </div>
+                                <div  class="w100" > 
+                                    <button id="">
+                                        <span>Modifier</span>
+                                    </button>                    
+                                </div>
+                            </div>                        
+                        </div> 
+                        <div class="grid colmn4">
+                            <div class="d-flex flex_colmn padding30  margin_top20 " style="height: 150px ;"> 
+                                <div class="bold text_color7 " style="font-size:20px;">Raison social : </div>
+                                <div class="bold " style="font-size: 15px;">Sarl </div>
+                            </div>
+                            
+                            <div class="d-flex flex_colmn padding30  margin_top20 " style="height: 150px ;"> 
+                                <div class="text_color7 bold" style="font-size: 20px;">Dénomination social: </div>
+                                <div class="bold " style="font-size: 15px;"> Denticheck </div>
+                            </div>
+
+                            <div class="d-flex flex_colmn padding30  margin_top20 " style="height: 150px ;"> 
+                                <div class="text_color7 bold" style="font-size: 20px;">Adredde: </div>
+                                <div class="bold " style="font-size: 15px;"> 17 rue bond Paris, France </div>
+                            </div>
+
+                            <div class="d-flex flex_colmn padding30  margin_top20 " style="height: 150px ;"> 
+                                <div class="text_color7 bold" style="font-size: 20px;">N° Siret : </div>
+                                <div class="bold " style="font-size: 15px;"> 28754864 </div>
+                            </div>
+
+                            <div class="d-flex flex_colmn padding30  margin_top20 " style="height: 150px ;"> 
+                                <div class="text_color7 bold" style="font-size: 20px;">N° Siren : </div>
+                                <div class="bold " style="font-size: 15px;"> 28754864 </div>
+                            </div>
+
+                            <div class="d-flex flex_colmn padding30  margin_top20 " style="height: 150px ;"> 
+                                <div class="text_color7 bold" style="font-size: 20px;">N° TVA intercommunautaire : </div>
+                                <div class="bold " style="font-size: 15px;"> 28754864 </div>
+                            </div>
+                        </div>                        
+
+                    </div>
+               </div>
+            </div>   
+
+        
+        <!-- /********************************** Administrateur page ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+        
+            <div id='users' class="page" data-id="users"> 
+                <div class="d-flex flex_colmn margin20" >
+                    <div class="bold" style="font-size: 25px;">Gestion des Administarteurs</div>
+                    <div class="d-flex justify-between">
+                        <div class="bold" style="font-size: 15px;"></div>
+                        <div class="flex_content">
+                            <div class="w100">
+                                <div class="input-group">
+                                    <input required="" type="text" name="text" autocomplete="off" class="input search_bar">
+                                    <label class="user-label">Recherche</label>
+                                </div>
+                            </div>
+                            <div  class="w100" > 
+                                <button id="">
+                                    <span>Ajouter</span>
+                                </button>                    
+                            </div>
+                        </div>
+                    
+                    </div> 
+                    <div class="table grid padding_top15 scroll">
+                        <div id="" class=" blod text_color1 grid colmn5 margin20 center ">
+                    
+                            <div></div>
+                            <div>Identité</div>
+                            <div>Email</div>
+                            <div>Username</div>
+                                                    
+                            <div></div>                       
+                        </div>
+                        <div id="list_fournisseur" class="list_folders text_color1 h65 scroll relative center">
+                            <div  class="table_items grid colmn5 padding_top15 text_color1 center ">
+                                <div> <div class="header-admin-image"><img src="/img/default-user.jpg"></div></div>   
+                                <div class=" text_color3">Sara Lkeouara</div>       
+                                <div class=" text_color10">lekouarasra88@gmail.com</div>     
+                                <div class=" text_color10">Dev</div>  
+                               <div>
+                                  <div class="dropdown">
+                                    <i class="fas fa-ellipsis-v dropbtn dropbtn_folder"  style="font-size: 20px;padding: 10px;"></i>
+                                    <div id="myDropdown_folder_${subscription.id}" class="dropdown-content">
+                                    <div class="action" id="edit_subscription"><i class="fa-solid fa-info light_grey padding5"></i>Modifier</div>
+                                    <div class="action" id="delete_subscription"><i class="fas fa-trash-alt light_grey padding5"></i>Supprimer</div>
+                                  </div>
+                                </div>
+                              </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>   
+        <!-- /********************************** Document page ***************************************************************/
+        /***********************************                          *************************************************************/ -->
+
+        
+            <div id='document' class="page" data-id="document">     
+                <div class="d-flex flex_colmn margin20" >
+                    <div class="bold" style="font-size: 25px;">Documents</div>
+                    <div class="d-flex justify-between">
+                        <div class="bold" style="font-size: 15px;">Documents Denticheck</div>
+                        <div class="flex_content">
+                            <div class="w100">
+                                <div class="input-group">
+                                    <input required="" type="text" name="text" autocomplete="off" class="input search_bar">
+                                    <label class="user-label">Recherche</label>
+                                </div>
+                            </div>
+                            <div id="add_new_document"  class="w100" > 
+                                <button id="">
+                                    <span>Ajouter</span>
+                                </button>                    
+                            </div>
+                        </div>
+                       
+                    </div>
+                    <div id="list_documents" class="d-flex margin_top20  h65 scroll loading-placeholder"  style="flex-wrap: wrap;"> 
+                    </div>
+                </div>
+            </div>  
+                  
+
+     
+        </div>
+     
+    </div>
+  
+
+
+        <div id="connection_status" class="shadow raduis padding30 ">
+            <div class="block bold text_red title_bg"> Probléme de connexion à internet</div>
+            <div class="block subtitle_small bold gray_color"> Veuilliez vérifier votre connexion internet</div>
+        </div>
+      
+    
+            
+        <div id="overlay"></div>  
+        <div id="overlayTop"></div>   
+
+        <div class="popup">
+            <div class="popup-content shadow">
+                <div class="SucessContainer">
+                    <div class="w3-modal-icon w3-modal-success animate">
+                        <span class="w3-modal-line w3-modal-tip animateSuccessTip"></span>
+                        <span class="w3-modal-line w3-modal-long animateSuccessLong"></span>
+                        <div class="w3-modal-placeholder"></div>
+                        <div class="w3-modal-fix"></div>
+                    </div>
+                </div>
+                <h5 class="message"></h3>
+                <div class="popup_footer">                        
+                    <div class="btn btn-outline-success ok" style="font-weight: 600;"> Ok </div>
+                </div>
+            </div>
+        </div>
+        <div class="pdfnone">
+            <div id="id_pdf">
+                <div id="pdf" class="pdf">
+                    
+        
+                </div>                
+                <div class="html2pdf__page-break">
+                    
+                </div>
+    
+            </div>
+        </div>
+        <div class="popup_problem">
+            <div class="popup-content shadow">
+                <img src="/img/warning.png" style="height: 75px;">
+                <h5 class="message"></h3>
+                <div class="popup_footer d-flex gap-30">                        
+                   
+                </div>
+            </div>
+        </div>
+        <div class="modal_details">
+            <div class="modal-dialog_details">
+                <div class="header_modal"> </div>
+            
+
+            </div>
+        </div> 
+        <div id="side_menu" class="grid row3 secondary_color1 text_color3" style="box-shadow: 2px 2px 10px #10bfd699;">
+                   
+        </div>   
+        <div id="side_menu_container" class="grid row3 secondary_color1 text_color3" style="box-shadow: 2px 2px 10px #10bfd699;">
+                   
+        </div>   
+    <!-- Include the Quill library -->
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" ></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="/js/general_function.js"></script>
+    <script src="js/socket.io.js"></script>
+    <script src="js/administration.js"></script>
+    
+</body>
+</html>
