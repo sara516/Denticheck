@@ -2407,9 +2407,8 @@ loader-box {
 
 .loading-wrapper .loader .loader-inner {
   display: block;
-  height: initial;
-  width: 55px;
-
+  /* height: initial; */
+  width: 60px;
   position: absolute;
   /* top: 50%; */
   left: 50%;
