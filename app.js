@@ -325,7 +325,7 @@ app.post(`/addnewtask_listTasks`, async (req, res,) => {
   try {
       var id= await db.insert('tasklists', obj);
       var result = await db.select('*', 'tasklists', {id: id}, "indexed");
-      console.log(obj1 , 'jqfhsiuhfiuqsfoiqosif')
+      console.log(obj1)
       if(obj1 == "empty"){
 
       }else{
@@ -337,6 +337,32 @@ app.post(`/addnewtask_listTasks`, async (req, res,) => {
       }
    
       res.send({"reponses":result, "id":id,"ok":true})
+ 
+    } catch (error) {
+      console.log(error)      
+      res.send({"ok":false, "error":error});
+  }
+});
+app.post(`/updatenewtask_listTasks`, async (req, res,) => {
+
+  let {obj, objectUpdate, objectDelete, objectAdd}  = req.body; 
+  console.log(obj, objectUpdate, objectDelete, objectAdd)
+  console.log('jsqnfjnsnfiqsufnqisufufb')
+  try {
+      var id= await db.insert('tasklists', obj);
+      // var result = await db.select('*', 'tasklists', {id: id}, "indexed");
+      // console.log(obj1)
+      // if(obj1 == "empty"){
+
+      // }else{
+      //   for(let element of Object.values(obj1)){
+      //     element['id_list'] =  id
+      //     element['created_by'] =  name.toString()
+      //     await db.insert('tasks', element);
+      //   }
+      // }
+   
+      // res.send({"reponses":result, "id":id,"ok":true})
  
     } catch (error) {
       console.log(error)      
