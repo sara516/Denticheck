@@ -566,11 +566,12 @@ code {
   border-bottom: 3px solid #63ceec;
 }
 #header-logo-container{
-  width: 100%;
+  width: 60px;
+  height: 60px;
   padding: 10px;
   background-color: #37dbc03d;
   border-radius: 50%;}
-#header-logo-container img{ height:50px; margin: auto;
+#header-logo-container img{ height:40px; margin: auto;
   display: flex;}
 #logo { height:55px; padding-top:0px; padding-left:100px; cursor:pointer;}
 .total_box{
