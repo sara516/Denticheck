@@ -1841,10 +1841,9 @@ GV.initialize_page.setting = async function(){
     let obj = { title: $(`#title_list_tasks`).val(),important : 1 }
     
 
-    await addFromObj('/addnewtask_listTasks',  {obj ,obj1}, GV.tasklists)
+    await addFromObj('/addnewtask_listTasks',  {obj ,obj1}, GV.tasklists, 'Ajouté(e)')
     $('#overlay').css('display', 'none')
-    $('#side_menu').css('display', 'none')
-    
+    $('#side_menu').css('display', 'none')    
     $('#list_tasks').html("")
     displayListTasks()
   })
@@ -1894,7 +1893,7 @@ GV.initialize_page.setting = async function(){
     }
     let objectDelete = GV.delete_tasks_array
     let data = {obj, objectUpdate, objectDelete, objectAdd, id} 
-    await addFromObj('/updatenewtask_listTasks', data, GV.tasklists)
+    await addFromObj('/updatenewtask_listTasks', data, GV.tasklists, 'Modifié(e)')
     $('#overlay').css('display', 'none')
     $('#side_menu').css('display', 'none')
     $('#list_tasks').html("")
