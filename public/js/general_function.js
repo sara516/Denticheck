@@ -400,13 +400,13 @@ if (data.ok) {
     alert('ça marche pas!')
  }
 }
-async function addFromObj(route, obj,storage){
+async function addFromObj(route, obj,storage, action){
 
 var data = await ajax(route, obj);
 
 if (data.ok) {
     $('.popup, #overlay').css('display','block');
-    $('.message').html('Ajouté(e) avec succès')
+    $('.message').html(`${action} avec succès`)
     $('#side_menu_add_container').css('display','none');
     let id=data.id
     console.log(data.reponses, storage, id)
