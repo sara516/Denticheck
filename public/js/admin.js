@@ -1709,7 +1709,7 @@ GV.initialize_page.setting = async function(){
   })
 
   function displaySideListTasks(id, obj, remove){
-    var side = {id : "form_general_task", title_add: "Ajouter Une liste" , title_update: "Modifier La liste",  btn_add: "add_listtasks" , btn_update: "update_listtasks", data_id : id }
+    var side = {id : "form_general_task", title_add: "Ajouter Une liste" , title_update: "Modifier La Liste",  btn_add: "add_listtasks" , btn_update: "update_listtasks", data_id : id }
     var arr = [
       {data_id : 'title',uniqueClass :'form_listtasks' , class : 'required' , selector : 'input', type : 'text', label : "Nom de la liste", id : 'title_list_tasks', placeholder :"Titre" },
       {selector:'div', id:"detail_task_list"}
@@ -1726,7 +1726,12 @@ GV.initialize_page.setting = async function(){
   }
 
   function displayDetailList(id){
+    
+    GV.add_tasks_array = []    
+    GV.delete_tasks_array = [] 
+    GV.edit_tasks_array = []
     if( id == undefined ){
+           
       $('#detail_task_list').html('')
       let html = `
       
@@ -1741,7 +1746,6 @@ GV.initialize_page.setting = async function(){
 
       $('#detail_task_list').html(html)
     }else{
-      GV.delete_tasks_array = []
       $('#detail_task_list').html('')
       let html = `
       
@@ -1754,20 +1758,19 @@ GV.initialize_page.setting = async function(){
       $('#detail_task_list').html(html)
       $('#details_list').html('')
       for(let id of Object.keys(GV.tasks)){
-        GV.add_tasks_array = []
         let item_index = GV.task_element++
         let task = GV.tasks[id]
         let content = `
-        <div class="input-container item_content content_task_${item_index} content_${item_index}"  data-id='${task.id}' style="border: 1px solid #8080808a;border-radius: 5px;padding: 10px; margin: 5px;">
+        <div class="input-container item_content content_task_${item_index} content_${task.id}"  data-id='${task.id}' style="border: 1px solid #8080808a;border-radius: 5px;padding: 10px; margin: 5px;">
           <div style=" text-align: end;"><i class="fa-solid fa-trash delete_task cursor" data-id='${task.id}' data-index="${item_index}"></i> </div>
           <div class="label">Titre de la tâche *</div>
-          <input data-id="title" id="title${item_index}" class="content_editable required" placeholder="Ex: Contrôle des affichages plastifiés salle d'attente..." value="${task.title}"></input>
+          <input data-id="title" id="title${task.id}" class="content_editable required" placeholder="Ex: Contrôle des affichages plastifiés salle d'attente..." value="${task.title}"></input>
           <div class="label">Description *</div>
-          <textarea data-id="comment"   id="comment${item_index}" class="content_editable" placeholder="">${task.comment}</textarea>
+          <textarea data-id="comment"   id="comment${task.id}" class="content_editable" placeholder="">${task.comment}</textarea>
         </div>
         `
         $('#details_list').append(content)
-
+        GV.edit_tasks_array.push(task.id)
       }
     }
   }
@@ -1792,13 +1795,22 @@ GV.initialize_page.setting = async function(){
   onClick('.remove_task', async function () { 
     let data = $(this).data('id')
     $(`.content_task_${data}`).remove();
+    let index = GV.add_tasks_array.indexOf(data);
+    if (index !== -1) { 
+      GV.add_tasks_array.splice(index, 1); 
+    }
   })
 
   onClick('.delete_task', async function () { 
     let id = $(this).data('id')
     let index = $(this).data('index')
     GV.delete_tasks_array.push(id)
-    // await delete_item(id , '/deleteTasks',GV.tasks, 'none')
+
+    let remove = GV.edit_tasks_array.indexOf(id);
+    if (index !== -1) { 
+      GV.edit_tasks_array.splice(remove, 1); 
+    }
+    
     $(`.content_task_${index}`).remove();
   })
 
@@ -1809,7 +1821,7 @@ GV.initialize_page.setting = async function(){
     var ObjArr = []
     let item = $("#details_list").find(".item_content")
     if(item.length == 0){
-      var object = 'empty'
+      var obj1 = 'empty'
     }else{
       for( i= 1 ; i<= parseInt(GV.task_item) ; i++){
         if($(`.content_${i}`)[0]){
@@ -1821,7 +1833,7 @@ GV.initialize_page.setting = async function(){
         }else{  
         }
       }
-      var object = ObjArr.reduce((acc, element, index) => {
+      var obj1 = ObjArr.reduce((acc, element, index) => {
         acc[index+1] = element;
         return acc;
       }, {}); 
@@ -1829,7 +1841,7 @@ GV.initialize_page.setting = async function(){
     let obj = { title: $(`#title_list_tasks`).val(),important : 1 }
     
 
-    await addFromObj('/addnewtask_listTasks', obj, object, GV.tasklists)
+    await addFromObj('/addnewtask_listTasks',  {obj ,obj1}, GV.tasklists)
     $('#overlay').css('display', 'none')
     $('#side_menu').css('display', 'none')
     
@@ -1841,16 +1853,50 @@ GV.initialize_page.setting = async function(){
     if (!check_form(".form_listtasks")) {
       return;
     }
-    var ObjArr = []
+    var ObjArrAdd = []
+    var ObjArrEdit = []
     let item = $("#details_list").find(".item_content")
-
     let obj = { title: $(`#title_list_tasks`).val()}
+   
+    if(item.length == 0){
+      var objectUpdate = 'empty'
+    }else{
+      for(let i of GV.add_tasks_array){
+        if($(`#details_list .content_${i}`)[0]){
+          let obj = {
+            title: $(`#title${i}`).val(),
+            comment: $(`#comment${i}`).val(),
+          }
+          ObjArrAdd.push(obj)
+        }else{  
+        }
+      }for(let edit of GV.edit_tasks_array){
+        if($(`#details_list .content_${edit}`)[0]){
+          let objEdit = {
+            title: $(`#title${edit}`).val(),
+            comment: $(`#comment${edit}`).val(),
+          }
+          ObjArrEdit.push(objEdit)
+        }else{  
+        }
+      }
+      var objectAdd = ObjArrAdd.reduce((acc, element, index) => {
+        acc[index+1] = element;
+        return acc;
+      }, {}); 
 
-    // await addFromObj('/updatenewtask_listTasks', obj, object, GV.tasklists)
-    $('#overlay').css('display', 'none')
-    $('#side_menu').css('display', 'none')
-    $('#list_tasks').html("")
-    displayListTasks()
+      var objectUpdate = ObjArrEdit.reduce((acc, element, index) => {
+        acc[index+1] = element;
+        return acc;
+      }, {}); 
+    }
+    let objectDelete = GV.delete_tasks_array
+    let data = {obj, objectUpdate, objectDelete, objectAdd} 
+    await addFromObj('/updatenewtask_listTasks', data, GV.tasklists)
+    // $('#overlay').css('display', 'none')
+    // $('#side_menu').css('display', 'none')
+    // $('#list_tasks').html("")
+    // displayListTasks()
   })
   
 

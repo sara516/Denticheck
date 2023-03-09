@@ -400,9 +400,9 @@ if (data.ok) {
     alert('ça marche pas!')
  }
 }
-async function addFromObj(route, obj, obj1,storage){
+async function addFromObj(route, obj,storage){
 
-var data = await ajax(route, {obj ,obj1});
+var data = await ajax(route, obj);
 
 if (data.ok) {
     $('.popup, #overlay').css('display','block');
