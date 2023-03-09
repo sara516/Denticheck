@@ -1638,7 +1638,7 @@ GV.initialize_page.users = async function(){
 GV.initialize_page.setting = async function(){
   GV.task_item = 1
   searchBar(".table_items")
-  await load_items('#general-setting', "/loadListTasks",{important : "1"})
+  await load_items('#general-setting', "/loadListTasks", {important : "1"})
   displayListTasks()
 
   $('#invoice-setting').hide()    
@@ -1664,6 +1664,8 @@ GV.initialize_page.setting = async function(){
   function displayListTasks(){
     for(let id of Object.keys(GV.tasklists)){
       let tasklist = GV.tasklists[id]
+      
+      if(tasklist.is_deleted == "1")continue;
       let html = `
       <div  class="table_items grid colmn4 padding_top15 text_color1 center ">
           <div class="first_latter" style="left: 0px; font-weight: 500; padding: 5px 10px; background-color: #53c5a0;">${tasklist.title.charAt(0).toUpperCase()}</div> 
@@ -1788,7 +1790,7 @@ GV.initialize_page.setting = async function(){
       <textarea data-id="comment"  id="comment${item_index}" class="content_editable" placeholder=""></textarea>
     </div>
     `
-    $('#details_list').append(html)
+    $('#details_list').prepend(html)
 
   })
 
@@ -1901,6 +1903,23 @@ GV.initialize_page.setting = async function(){
   })
   
 
+  onClick('#delete_tasklist', async function(){
+    let id = $(this).data('id')
+    $('#overlay').css('display', 'none')
+    $('#side_menu').css('display', 'none')
+    $('.popup_problem').css('display','block');
+    $('.popup_problem .message').html("Êtes-vous sûr de vouloir supprimer cette liste")
+    $('.popup_problem .popup_footer').html(`<div class="btn btn-outline-success ok" style="font-weight: 600;"> Non </div> <div id="valide_delete_liste" data-id=${id} class="btn" style="font-weight: 600;"> Oui </div>`)
+  })
+
+  onClick('#valide_delete_liste', async function(){
+    let id = $(this).data('id')
+    await updateFromValues(id,'/deleteTaskListe', GV.tasklists , "remove")
+    $('#list_tasks').html("")
+    displayListTasks()
+    PlaceholderisEmpty('#list_tasks')
+    $('.popup_problem').css('display','none');
+  })
 
 //! ///////////////////////////////////////////////////////////
 //! /////////////////!    IMAGE UPLOAD    /////////////////////

@@ -2359,6 +2359,35 @@ loader-box {
   transform: translate(-50%, -50%);
 }
 
+.logo {
+  position: relative;
+  display: inline-block;
+}
+
+.logo img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  animation: logo-fade-in 2s ease-in-out forwards;
+}
+
+@keyframes logo-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
 .loading-wrapper {
   width: 80px;
   height: 80px;
@@ -2366,8 +2395,8 @@ loader-box {
 }
 
 .loading-wrapper .loader {
-  height: 80px;
-  width: 80px;
+  height: 85px;
+  width: 85px;
   border: 3px solid #e5e5e5;
   border-radius: 50%;
   -webkit-animation: pulse1572 1200ms ease-in-out;
@@ -2378,15 +2407,16 @@ loader-box {
 
 .loading-wrapper .loader .loader-inner {
   display: block;
-  height: 40px;
-  width: 40px;
+  height: initial;
+  width: 55px;
+
   position: absolute;
-  top: 50%;
+  /* top: 50%; */
   left: 50%;
   -webkit-transform: translateX(-50%) translateY(-50%);
   transform: translateX(-50%) translateY(-50%);
-  background: linear-gradient(180deg, rgb(0, 140, 255) 0%, rgb(218, 67, 218) 100%);
-  -webkit-transform-origin: 50% 50%;
+  /* background: linear-gradient(180deg, rgb(0, 140, 255) 0%, rgb(218, 67, 218) 100%); */
+  /* -webkit-transform-origin: 50% 50%;
   transform-origin: 50% 50%;
   border-radius: 50%;
   -webkit-animation: innerPulse934 1200ms ease-in-out;
@@ -2395,7 +2425,7 @@ loader-box {
   animation-iteration-count: infinite;
   -webkit-animation-delay: 600ms;
   animation-delay: 600ms;
-  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22); */
 }
 
 @keyframes pulse1572 {

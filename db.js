@@ -32,7 +32,7 @@ db_module.exec_query = async function (query, is_row){
 db_module.selectOR = async function(columns, table_name, where, is_row,limit,offset){  
     limit = (limit==undefined) ? "" : `LIMIT ${limit}`
     offset = (offset==undefined) ? "" : `OFFSET ${offset}`
-    var query=`SELECT ${columns} FROM ${table_name} ${db_module.get_where_or_clause(where)} ORDER BY id ASC ${limit} ${offset}`;
+    var query=`SELECT ${columns} FROM ${table_name} ${db_module.get_where_or_clause(where)} AND is_deleted = "0" ORDER BY id ASC ${limit} ${offset}`;
     return await db_module.exec_query(query, is_row);
 }
 db_module.select = async function(columns, table_name, where, is_row,limit,offset){  
