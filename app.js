@@ -71,11 +71,11 @@ app.post(`/uploads`, upload.single('file'), (req, res, next) => {
 
 
 
-app.get(`/`, async (req, res,) => { 
-    res.sendFile(base_url+'/login.html');
-});
+// app.get(, async (req, res,) => { 
+//     res.sendFile(base_url+'/login.html');
+// });
 
-app.get([`/app`],  async (req, res,) => { 
+app.get([`/app`,`/`],  async (req, res,) => { 
     if(req.session.loggedin){
         if(req.session.CurrentUser.type == 'admin'){
           res.sendFile(base_url_admin+'./admin.html');
@@ -202,8 +202,15 @@ app.post('/loadListTasks', async (req, res,) => {
     let table_name = 'tasklists' 
     result[table_name] = await db.selectOR('*', table_name,where ,"indexed");
     res.send({"reponses": result , "success":true });
-
 });
+app.post('/loadLicences', async (req, res,) => {
+    let result = {};
+    let {where} = req.body
+    let table_name = 'licences' 
+    result[table_name] = await db.selectOR('*', table_name,where ,"indexed");
+    res.send({"reponses": result , "success":true });
+});
+
 app.post('/loaddocument', async (req, res,) => {
     let result = {};
     let {where} = req.body
