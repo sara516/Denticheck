@@ -200,7 +200,7 @@ app.post('/loadListTasks', async (req, res,) => {
     let result = {};
     let {where} = req.body
     let table_name = 'tasklists' 
-    result[table_name] = await db.selectOR('*', table_name, where, "indexed");
+    result[table_name] = await db.selectOR('*', table_name,where ,"indexed");
     res.send({"reponses": result , "success":true });
 
 });
@@ -504,6 +504,19 @@ app.post(`/deletedocument`, async (req, res,) => {
   try {
     await db.update('documents',obj, {id} );
       var result = await db.select('*', 'documents', {id: id}, "indexed");
+      res.send({"reponses":result, "id":id,"ok":true})
+
+    } catch (error) {
+      console.log(error)      
+      res.send({"ok":false, "error":error});
+  }
+});
+app.post(`/deleteTaskListe`, async (req, res,) => {
+
+  let {id} = req.body;  
+  try {
+    await db.update('tasklists',{is_deleted : "1"} ,{id} );
+      var result = await db.select('*', 'tasklists', {id: id}, "indexed");
       res.send({"reponses":result, "id":id,"ok":true})
 
     } catch (error) {
