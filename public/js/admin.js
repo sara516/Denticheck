@@ -1853,6 +1853,7 @@ GV.initialize_page.setting = async function(){
     if (!check_form(".form_listtasks")) {
       return;
     }
+    let id = $(this).data('id')
     var ObjArrAdd = []
     var ObjArrEdit = []
     let item = $("#details_list").find(".item_content")
@@ -1873,6 +1874,7 @@ GV.initialize_page.setting = async function(){
       }for(let edit of GV.edit_tasks_array){
         if($(`#details_list .content_${edit}`)[0]){
           let objEdit = {
+            id : edit,
             title: $(`#title${edit}`).val(),
             comment: $(`#comment${edit}`).val(),
           }
@@ -1893,10 +1895,10 @@ GV.initialize_page.setting = async function(){
     let objectDelete = GV.delete_tasks_array
     let data = {obj, objectUpdate, objectDelete, objectAdd, id} 
     await addFromObj('/updatenewtask_listTasks', data, GV.tasklists)
-    // $('#overlay').css('display', 'none')
-    // $('#side_menu').css('display', 'none')
-    // $('#list_tasks').html("")
-    // displayListTasks()
+    $('#overlay').css('display', 'none')
+    $('#side_menu').css('display', 'none')
+    $('#list_tasks').html("")
+    displayListTasks()
   })
   
 
