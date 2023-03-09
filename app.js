@@ -345,24 +345,36 @@ app.post(`/addnewtask_listTasks`, async (req, res,) => {
 });
 app.post(`/updatenewtask_listTasks`, async (req, res,) => {
 
-  let {obj, objectUpdate, objectDelete, objectAdd}  = req.body; 
-  console.log(obj, objectUpdate, objectDelete, objectAdd)
-  console.log('jsqnfjnsnfiqsufnqisufufb')
+  let {obj, objectDelete, objectUpdate, objectAdd, id}  = req.body; 
+  console.log(obj, objectUpdate, objectDelete, objectAdd, id)
+  
+  let name = req.session.CurrentUser.first_name + " " + req.session.CurrentUser.last_name 
   try {
-      var id= await db.insert('tasklists', obj);
-      // var result = await db.select('*', 'tasklists', {id: id}, "indexed");
-      // console.log(obj1)
-      // if(obj1 == "empty"){
+      db.update('tasklists',obj, {id});
+      var result = await db.select('*', 'tasklists', {id: id}, "indexed");
+      if(objectDelete == undefined){
+      }else{
+        for(let element of Object.values(objectDelete)){
+          await db.delete('tasks',{id: element});
+        }
+      }if(objectAdd == undefined){
+      }else{
+        for(let elementadd of Object.values(objectAdd)){
+          elementadd['id_list'] =  id
+          elementadd['created_by'] =  name.toString()
+          await db.insert('tasks', elementadd);
+        }
+      }if(objectUpdate == undefined){
 
-      // }else{
-      //   for(let element of Object.values(obj1)){
-      //     element['id_list'] =  id
-      //     element['created_by'] =  name.toString()
-      //     await db.insert('tasks', element);
-      //   }
-      // }
+      }else{
+         for(let elementupdate of Object.values(objectUpdate)){
+          let id = elementupdate.id
+          delete elementupdate.id;
+          db.update('tasks',elementupdate, {id});
+        }
+      }
    
-      // res.send({"reponses":result, "id":id,"ok":true})
+      res.send({"reponses":result, "id":id,"ok":true})
  
     } catch (error) {
       console.log(error)      

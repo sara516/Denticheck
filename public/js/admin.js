@@ -1891,7 +1891,7 @@ GV.initialize_page.setting = async function(){
       }, {}); 
     }
     let objectDelete = GV.delete_tasks_array
-    let data = {obj, objectUpdate, objectDelete, objectAdd} 
+    let data = {obj, objectUpdate, objectDelete, objectAdd, id} 
     await addFromObj('/updatenewtask_listTasks', data, GV.tasklists)
     // $('#overlay').css('display', 'none')
     // $('#side_menu').css('display', 'none')
