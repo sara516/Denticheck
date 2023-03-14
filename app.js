@@ -207,15 +207,14 @@ app.post('/loadLicences', async (req, res,) => {
     let result = {};
     let {where} = req.body
     let table_name = 'licences' 
-    result[table_name] = await db.selectOR('*', table_name,where ,"indexed");
+    result[table_name] = await db.select('*', table_name,where ,"indexed");
     res.send({"reponses": result , "success":true });
 });
 
 app.post('/loaddocument', async (req, res,) => {
     let result = {};
-    let {where} = req.body
     let table_name = 'documents' 
-    result[table_name] = await db.select('*', table_name, where, "indexed");
+    result[table_name] = await db.select('*', table_name, {is_deleted : '0'}, "indexed");
     res.send({"reponses": result , "success":true });
 
 });
@@ -266,6 +265,14 @@ app.post('/loadDesignations', async (req, res,) => {
     res.send({"reponses": result , "success":true });
 
 });
+app.post('/loadDesignationsLicence', async (req, res,) => {
+    let result = {};
+    let {where} = req.body
+    let table_name = 'designations' 
+    result[table_name] = await db.select('*', table_name, {unity: 'Licence'}, "indexed");
+    res.send({"reponses": result , "success":true });
+
+});
 app.post('/loadOperationscompanies', async (req, res,) => {
     let result = {};
     let {where} = req.body
@@ -293,6 +300,23 @@ app.post(`/addnewgroup`, async (req, res,) => {
   try {
       var id= await db.insert('groups', obj);
       var result = await db.select('*', 'groups', {id: id}, "indexed");
+      res.send({"reponses":result, "id":id,"ok":true})
+ 
+    } catch (error) {
+      console.log(error)      
+      res.send({"ok":false, "error":error});
+  }
+});
+
+app.post(`/addnewlicence`, async (req, res,) => {
+
+  let {obj} = req.body; 
+  let user_id = req.session.CurrentUser.id 
+  obj['id_user'] =  user_id
+  console.log(req.session.CurrentUser.id,req.session.CurrentUser.id_companies, obj )
+  try {
+      var id= await db.insert('licences', obj);
+      var result = await db.select('*', 'licences', {id: id}, "indexed");
       res.send({"reponses":result, "id":id,"ok":true})
  
     } catch (error) {
