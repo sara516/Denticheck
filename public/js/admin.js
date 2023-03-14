@@ -84,7 +84,7 @@ GV.initialize_page.document = async function(){
 
   GV.documents = {}
   searchBar(".btn_edit_document")
-  await load_items('#document', "/loaddocument",{is_deleted : '0'})
+  await load_items('#document', "/loaddocument",{})
   displayDocuments()
 
 }
@@ -182,10 +182,124 @@ GV.initialize_page.document = async function(){
 
 
 GV.initialize_page.licences = async function(){
+  searchBar(".table_items")
   displayPlaceholder()
+  GV.groups = {}
+  GV.companies = {}
+  await load_items('#companies', "/loadCompaniesGroupes" ,{})  
+  await load_items('#licences', "/loadLicences" ,{})
+  
+  displayLicences()
+}
 
+function displayLicences(){
+  for(let id of Object.keys(GV.licences)){
+    let licence = GV.licences[id]
 
+    const date1 = new Date(moment(licence.start_date).format('YYYY-MM-DD'));
+    const date2 = new Date(moment(licence.end_date).format('YYYY-MM-DD'));
+
+    const diffInMs = Math.abs(date2 - date1);
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    let html = `
+    <div  class="table_items grid colmn7 padding_top15 text_color1 center ">
+        <div class=" text_color3">${licence.id_company == null ? GV.groups[licence.id_group].name : GV.companies[licence.id_company].name}</div>       
+        <div class=" text_color10">${licence.id_company == null ? `${GV.groups[licence.id_group].country} ${GV.groups[licence.id_group].region}` : `${GV.companies[licence.id_company].country} ${GV.companies[licence.id_company].region}`}</div>     
+        <div class=" text_color10">${licence.type}</div>     
+        <div class=" text_color10">${moment(licence.start_date).format('DD/MM/YYYY')}</div>     
+        <div class=" text_color10">${moment(licence.end_date).format('DD/MM/YYYY')}</div>     
+        <div class=" text_color10">${diffInDays}</div>     
+      <div>
+          <div class="dropdown">
+            <i class="fas fa-ellipsis-v dropbtn dropbtn_licence" data-id="${licence.id}" style="font-size: 20px;padding: 10px;"></i>
+            <div id="myDropdown_licence_${licence.id}" class="dropdown-content">
+            <div class="action" id="edit_licence"><i class="fa-solid fa-info light_grey padding5"></i>Modifier</div>
+          </div>
+        </div>
+      </div>  
+    </div>
+
+    `
+    $('#list_licences').prepend(html)
   }
+}
+onClick('.dropbtn_licence', function (e) {
+  e.stopPropagation()
+  let id= $(this).data("id")
+  $('.dropdown-content').removeClass('show')
+  document.getElementById(`myDropdown_licence_${id}`).classList.toggle("show"); 
+});
+
+onClick('#add_licence', async function(){
+  $('#overlay').css('display', 'grid')
+  $('#side_menu').css('display', 'grid')
+  GV.groups = {}
+  GV.companies = {}
+  GV.designations = {}
+  await load_items('#companies', "/loadCompaniesGroupes" ,{})  
+  await load_items('current', "/loadDesignationsLicence" ,{})
+
+  displaySideLicence()
+})
+
+function displaySideLicence(id, obj, remove){
+
+  let groupArr = []
+  let articleArr = []
+  for(let element of Object.keys(GV.groups)){
+    let group = GV.groups[element]
+    let html = {value : group.id , html : `${group.name}, Groupe`}
+    groupArr.push(html)
+  }for(let idcompany of Object.keys(GV.companies)){
+    let company = GV.companies[idcompany]
+    let html = {value : company.id , html : `${company.name}, Entreprise`}
+    groupArr.push(html)
+  }for(let article of Object.keys(GV.designations)){
+    let designation = GV.designations[article]
+    let html = {value : designation.id , html : `${designation.name}, ${designation.unit_price} €`}
+    articleArr.push(html)
+  }
+
+
+  var side = {id : "form_licence", title_add: "Ajouter Une Licence" , title_update: "Modifier La Licence",  btn_add: "add_valid_licence" , btn_update: "update_licence", data_id : id }
+  var arr = [
+    {id : 'check-box-company',  selector : 'div'},
+    // {data_id : 'id_group', required : 'required' ,selector : 'select', type : 'text', label : "Séléctionner un groupe", uniqueClass: "list-groups" ,id: 'list-groups', option : groupArr},
+    {class:"grid",  data_id : 'start_date',  selector : 'input', type : 'date', label : "Date du début de la licence", id : '', placeholder :"Début" ,data_idgrid : 'end_date', class1 : 'required' , selector1 : 'input', type1 : 'date', label1 : "Date de fin de la licence", id1 : '', placeholder1 :"Date de fin" } ,
+    {data_id : 'id_designation', required : 'required' ,selector : 'select', type : 'text', label : "Séléctionner une désignations ( offre )", uniqueClass: "list-articls" ,id: 'list-articls', option :articleArr},
+  ]
+  if(id == undefined){
+    displaySide(arr, side,'side')
+    $('#check-box-company').html(`
+    <form>
+      <label>
+        <input type="checkbox" name="option1"> Option 1
+      </label>
+      <br>
+      <label>
+        <input type="checkbox" name="option2"> Option 2
+      </label>
+    </form>
+    `)
+  }else{
+    displaySide(arr, side,'side', obj[id], id, remove)
+  }
+
+  
+}
+onClick('#add_valid_licence', async function(){
+  if (!check_form("#form_licence")) {
+    return;
+  }
+  await addFromForm('/addnewlicence', '#form_licence',GV.licences)
+
+    $('#list_licences').html('')
+    displayLicences() 
+    PlaceholderisEmpty('#licences')  
+  $('#overlay').css('display', 'none')
+  $('#side_menu').css('display', 'none')
+})
   //! ///////////////////////////////////////////////////////////
 //! //////////////////!    companies   //////////////////////////
 //! ///////////////////////////////////////////////////////////
@@ -234,9 +348,9 @@ GV.initialize_page.companies = async function(){
           <div class="blod text_color10 padding15">Groupe</div>   
           <div>
               <div class="dropdown">
-                <i class="fas fa-ellipsis-v dropbtn dropbtn_company" data-id='${group.id}'  style="font-size: 20px;padding: 10px;"></i>
-                <div id="myDropdown_company_${group.id}" class="dropdown-content">
-                <div class="action detail_edit_company" data-element="group" data-id="${company.id}"><i class="fa-solid fa-info light_grey padding5"></i>Modifier</div>
+                <i class="fas fa-ellipsis-v dropbtn dropbtn_group" data-id='${group.id}'  style="font-size: 20px;padding: 10px;"></i>
+                <div id="myDropdown_group_${group.id}" class="dropdown-content">
+                <div class="action detail_edit_company" data-element="group" data-id="${group.id}"><i class="fa-solid fa-info light_grey padding5"></i>Modifier</div>
                 <div class="action stat_company" data-id='${company.id}' data-element="group"><i class="fa-solid fa-info light_grey padding5"></i>Voir les statistiques</div>
               </div>
             </div>
@@ -252,6 +366,12 @@ GV.initialize_page.companies = async function(){
     let id= $(this).data("id")
     $('.dropdown-content').removeClass('show')
     document.getElementById(`myDropdown_company_${id}`).classList.toggle("show"); 
+  });
+  onClick('.dropbtn_group', function (e) {
+    e.stopPropagation()
+    let id= $(this).data("id")
+    $('.dropdown-content').removeClass('show')
+    document.getElementById(`myDropdown_group_${id}`).classList.toggle("show"); 
   });
 
 
@@ -443,8 +563,11 @@ GV.initialize_page.companies = async function(){
   onClick('.detail_edit_company', function(e){
     e.stopPropagation()
     let id = $(this).data('id')
+
     $('#overlay').css('display', 'grid')
     $('#side_menu').css('display', 'grid')
+    console.log($(this).data('element') , id, GV.groups)
+
     if($(this).data('element') =="group"){
       displaySideCompany(id, GV.groups, 'delete_document', 'group')
     }else{
@@ -1570,16 +1693,17 @@ GV.initialize_page.article = async function(){
     await addFromForm('/addnewdesignation', '#form_designation',GV.designations)
     
     console.log(GV.designations)
-    if(GV.page_name == "companies"){
+    if(GV.page_name == "facturation"){
+      $('#overlay').css('display', 'none')
+      $('#side_menu').css('display', 'none')
+      displayDropdownItems()
+    }else{
+      
       $('#list_designation').html('')
       displayDesignation()
       PlaceholderisEmpty('#article')
       $('#overlay').css('display', 'none')
       $('#side_menu').css('display', 'none')
-  }else{
-    $('#overlay').css('display', 'none')
-    $('#side_menu').css('display', 'none')
-    displayDropdownItems()
   }
   })
   onClick('.detail_edit_designation', function(e){
