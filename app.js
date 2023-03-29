@@ -198,23 +198,25 @@ app.post('/loadCurentUserCompany', async (req, res,) => {
 
 app.post('/loadListTasks', async (req, res,) => {
     let result = {};
-    let {where} = req.body
     let table_name = 'tasklists' 
-    result[table_name] = await db.selectOR('*', table_name,where ,"indexed");
+    result[table_name] = await db.selectOR('*', table_name, {important : "1"},"indexed");
     res.send({"reponses": result , "success":true });
 });
-app.post('/loadLicences', async (req, res,) => {
+
+
+
+app.post('/loadLicenceCompany', async (req, res,) => {
     let result = {};
     let {where} = req.body
     let table_name = 'licences' 
-    result[table_name] = await db.select('*', table_name,where ,"indexed");
+    result[table_name] = await db.select('*', table_name,{id_company: where} ,"indexed");
     res.send({"reponses": result , "success":true });
 });
 
 app.post('/loaddocument', async (req, res,) => {
     let result = {};
-    let table_name = 'documents' 
-    result[table_name] = await db.select('*', table_name, {is_deleted : '0'}, "indexed");
+    let table_name = 'documents'
+    result[table_name] = await db.selectOR('*', table_name, {is_important : '1'} ,"indexed");
     res.send({"reponses": result , "success":true });
 
 });
@@ -222,7 +224,7 @@ app.post('/loadTasks', async (req, res,) => {
     let result = {};
     let {where} = req.body
     let table_name = 'tasks' 
-    result[table_name] = await db.select('*', table_name, where, "indexed");
+    result[table_name] = await db.select('*', table_name, {id_list: where }, "indexed");
     res.send({"reponses": result , "success":true });
 
 });
@@ -230,10 +232,25 @@ app.post('/loadfiles', async (req, res,) => {
     let result = {};
     let {where} = req.body
     let table_name = 'files' 
-    result[table_name] = await db.select('*', table_name, where, "indexed");
+    result[table_name] = await db.select('*', table_name, { id_company : where , cancel_status: '0', imported: '0'}, "indexed");
     res.send({"reponses": result , "success":true });
-
 });
+app.post('/loadfilesOfOperation', async (req, res,) => {
+    let result = {};
+    let {where} = req.body
+    let table_name = 'files' 
+    result[table_name] = await db.select('*', table_name, {id_operation: where}, "indexed");
+    res.send({"reponses": result , "success":true });
+});
+
+app.post('/loadCompaniesAssignToGroup', async (req, res,) => {
+    let result = {};
+    let {where} = req.body
+    let table_name = 'companies' 
+    result[table_name] = await db.select('*', table_name, {id_group: where}, "indexed");
+    res.send({"reponses": result , "success":true });
+});
+
 app.post('/loadfile', async (req, res,) => {
     let result = {};
     let {where} = req.body
@@ -245,7 +262,7 @@ app.post('/loadpayment', async (req, res,) => {
     let result = {};
     let {where} = req.body
     let table_name = 'payment' 
-    result[table_name] = await db.select('*', table_name, where, "indexed");
+    result[table_name] = await db.select('*', table_name, {id_file: where}, "indexed");
     res.send({"reponses": result , "success":true });
 
 });
@@ -254,6 +271,14 @@ app.post('/loaditems', async (req, res,) => {
     let {where} = req.body
     let table_name = 'items' 
     result[table_name] = await db.select('*', table_name, where, "indexed");
+    res.send({"reponses": result , "success":true });
+
+});
+app.post('/loadCompaniesDontAssign', async (req, res,) => {
+    let result = {};
+    let {where} = req.body
+    let table_name = 'companies' 
+    result[table_name] = await db.select('*', table_name, {id_group: 'IS NULL'}, "indexed");
     res.send({"reponses": result , "success":true });
 
 });
@@ -277,16 +302,49 @@ app.post('/loadOperationscompanies', async (req, res,) => {
     let result = {};
     let {where} = req.body
     let table_name = 'operations' 
-    result[table_name] = await db.select('*', table_name, where, "indexed");
+    console.log( where['id'])
+    result[table_name] = await db.select('*', table_name, {id_company: where}, "indexed");
     res.send({"reponses": result , "success":true });
 
 });
-app.post('/loadCompaniesGroupes', async (req, res,) => {
+app.post('/loadCompaniesFromIdGroupe', async (req, res,) => {
+    let result = {};
+    let {where} = req.body
+    console.log(where, where['value'])
+    let table_name = 'companies' 
+    result[table_name] = await db.select('*', table_name, {id_group : where['value']}, "indexed");
+    res.send({"reponses": result , "success":true });
+
+});
+app.post('/loadCompanies', async (req, res,) => {
     let result = {};
     let {where} = req.body
     result['companies'] = await db.select('*', 'companies', where, "indexed");
+    res.send({"reponses": result , "success":true});
+
+});
+app.post('/loadGroupes', async (req, res,) => {
+    let result = {};
+    let {where} = req.body
     result['groups'] = await db.select('*', 'groups', where, "indexed");
     res.send({"reponses": result , "success":true});
+
+});
+
+app.post('/edit_assign_companies', async (req, res,) => {  
+    let {obj, id } = req.body
+    console.log(id,obj)
+    try {
+      for(let id_obj of obj ){  
+        await db.update('companies',{id_group: id}, {id:id_obj } );
+      }
+      
+      var result = await db.select('*', 'companies', {}, "indexed");
+      res.send({"reponses":result, "id":id,"ok":true})
+      }catch (error) {
+        console.log(error)      
+        res.send({"ok":false, "error":error});
+    }
 
 });
 
@@ -298,10 +356,39 @@ app.post(`/addnewgroup`, async (req, res,) => {
   obj['id_user'] =  user_id
   console.log(req.session.CurrentUser.id,req.session.CurrentUser.id_companies, obj )
   try {
-      var id= await db.insert('groups', obj);
-      var result = await db.select('*', 'groups', {id: id}, "indexed");
-      res.send({"reponses":result, "id":id,"ok":true})
- 
+
+      var email = await db.select('*', 'groups', {email: obj["email"]}, "indexed");
+     console.log(Object.values(email).length)
+     console.log(email)
+
+      if(Object.values(email).length == 0){
+        let password =  obj["password"]
+        obj["password"] = await bcrypt.hash(password, 10);
+        var id= await db.insert('groups', obj);
+        var result = await db.select('*', 'groups', {id: id}, "indexed");
+        res.send({"reponses":result, "id":id,"ok":true})
+
+      }else{
+        console.log('test')
+        res.send({"ok":"message d'erreur", "id":"",})
+      }
+    } catch (error) {
+      console.log(error)      
+      res.send({"ok":false, "error":error});
+  }
+});
+app.post(`/editgroup`, async (req, res,) => {
+
+  let {obj, id} = req.body; 
+  try {
+
+        let password =  obj["password"]
+        obj["password"] = await bcrypt.hash(password, 10);
+        var id_group= await db.update('groups',obj, {id});
+
+        var result = await db.select('*', 'groups', {id: id}, "indexed");
+        res.send({"reponses":result, "id":id,"ok":true})
+
     } catch (error) {
       console.log(error)      
       res.send({"ok":false, "error":error});
@@ -311,9 +398,11 @@ app.post(`/addnewgroup`, async (req, res,) => {
 app.post(`/addnewlicence`, async (req, res,) => {
 
   let {obj} = req.body; 
-  let user_id = req.session.CurrentUser.id 
-  obj['id_user'] =  user_id
   console.log(req.session.CurrentUser.id,req.session.CurrentUser.id_companies, obj )
+
+  let user_id = req.session.CurrentUser.id 
+
+  obj['id_user'] =  user_id
   try {
       var id= await db.insert('licences', obj);
       var result = await db.select('*', 'licences', {id: id}, "indexed");
@@ -340,10 +429,26 @@ app.post(`/addnewdesignation`, async (req, res,) => {
       res.send({"ok":false, "error":error});
   }
 });
+app.post(`/addnewLicence`, async (req, res,) => {
+
+  let {obj} = req.body; 
+  let user_id = req.session.CurrentUser.id 
+  obj['id_user'] =  user_id
+  console.log(req.session.CurrentUser.id,req.session.CurrentUser.id_companies, obj )
+  try {
+      var id= await db.insert('licences', obj);
+      var result = await db.select('*', 'licences', {id: id}, "indexed");
+      res.send({"reponses":result, "id":id,"ok":true})
+ 
+    } catch (error) {
+      console.log(error)      
+      res.send({"ok":false, "error":error});
+  }
+});
+
 app.post(`/addnewtask_listTasks`, async (req, res,) => {
 
   let {obj, obj1} = req.body; 
-  
   let name = req.session.CurrentUser.first_name + " " + req.session.CurrentUser.last_name 
   let id_user = req.session.CurrentUser.id
   let id_company = req.session.CurrentUser.id_companies
@@ -374,6 +479,7 @@ app.post(`/addnewtask_listTasks`, async (req, res,) => {
       res.send({"ok":false, "error":error});
   }
 });
+
 app.post(`/updatenewtask_listTasks`, async (req, res,) => {
 
   let {obj, objectDelete, objectUpdate, objectAdd, id}  = req.body; 
@@ -450,6 +556,7 @@ app.post(`/addnewdocument`, async (req, res,) => {
 
   let {obj} = req.body; 
   obj['id_user'] = req.session.CurrentUser.id  
+  obj['is_important'] = '1'
   obj['id_company'] = req.session.CurrentUser.id_companies
   console.log(req.session.CurrentUser.id,req.session.CurrentUser.id_companies, obj )
   try {
@@ -502,6 +609,19 @@ app.post(`/updatedesignation`, async (req, res,) => {
       res.send({"ok":false, "error":error});
   }
 });
+app.post(`/updateLicence`, async (req, res,) => {
+
+  let {id, obj} = req.body;  
+  try {
+    await db.update('licences',obj, {id} );
+      var result = await db.select('*', 'licences', {id: id}, "indexed");
+      res.send({"reponses":result, "id":id,"ok":true})
+
+    } catch (error) {
+      console.log(error)      
+      res.send({"ok":false, "error":error});
+  }
+});
 app.post(`/updatecompany`, async (req, res,) => {
 
   let {id, obj} = req.body;  
@@ -542,6 +662,35 @@ app.post(`/deletedocument`, async (req, res,) => {
       res.send({"ok":false, "error":error});
   }
 });
+
+app.post(`/desableLicence`, async (req, res,) => {
+
+  let {id, obj} = req.body;  
+  try {
+    await db.update('licences',{is_valid: '0'}, {id} );
+      var result = await db.select('*', 'licences', {id: id}, "indexed");
+      res.send({"reponses":result, "id":id,"ok":true})
+
+    } catch (error) {
+      console.log(error)      
+      res.send({"ok":false, "error":error});
+  }
+});
+app.post(`/enableLicence`, async (req, res,) => {
+
+  let {id, obj} = req.body;  
+  try {
+    await db.update('licences',{is_valid: '1'}, {id} );
+      var result = await db.select('*', 'licences', {id: id}, "indexed");
+      res.send({"reponses":result, "id":id,"ok":true})
+
+    } catch (error) {
+      console.log(error)      
+      res.send({"ok":false, "error":error});
+  }
+});
+
+
 app.post(`/deleteTaskListe`, async (req, res,) => {
 
   let {id} = req.body;  
@@ -591,59 +740,44 @@ app.post('/search_items', async (req, res,) => {
 
 });
 
+app.post('/generat_invoiceFrom_licence', async (req, res,) => {
+    let result = {};
+    let {data} = req.body
+    
+    if(data['id_company'] == ''){
 
-// app.post('/load_items', async (req, res,) => {
-//   let result = {};
-//   let {table_name, where} = req.body
-//   result[table_name] = await db.select('*', table_name, where, "indexed");
-//   res.send({"reponses":result, "success":true });
+      var where = {id_group: data['id_group'] , name: 'Licences'  }
+      var obj = {id_group: data['id_group'] , name: 'Licences', id_user: req.session.CurrentUser.id  , id_current_company: req.session.CurrentUser.id_companies }
+    
+    }else{
 
-// });
+      var where = {id_company: data['id_company'], name: 'Licences'}
+      var obj = {id_company: data['id_company'] , name: 'Licences', id_user: req.session.CurrentUser.id  , id_current_company: req.session.CurrentUser.id_companies }
+    
+    }
 
+      var operation = await db.select('*', 'operations', where, "indexed");
 
-// app.post(`/add_to_database`, async (req, res,) => {
+    if(Object.values(operation).length == 0){      
+      var id_operation = await db.insert('operations', obj);
+    }else{
+      console.log('il est different')
+      var id_operation = Object.values(operation)[0].id
+    }
 
-//   let {obj, table_name } = req.body;  
-//   try {
-//       var id= await db.insert(table_name, obj);
-//       var result = await db.select('*', table_name, {id: id}, "indexed");
-//       res.send({"reponses":result, "id":id,"ok":true})
- 
-//     } catch (error) {
-//       console.log(error)      
-//       res.send({"ok":false, "error":error});
-//   }
-// });
+    var files = await db.select('*', 'files', {type: 'Facture'}, "indexed");
+    var file_number = (Object.values(files).length)+1
+    const currentYearStr = new Date().getFullYear().toString()
+    const last2 = currentYearStr.substring(currentYearStr.length - 2);
+    const last2Num = Number(last2);
+            
+    let objFile = {id_operation: id_operation , id_user: req.session.CurrentUser.id  , id_current_company: req.session.CurrentUser.id_companies , type : 'Facture', file_number: `${file_number} - ${last2Num}`, status: 'Non payée',  date_issue: new Date(), created_by: `${req.session.CurrentUser.first_name + ' ' +req.session.CurrentUser.last_name}` }
+    console.log(objFile)
+    var id_file = await db.insert('files', objFile);
+    console.log(id_file)
+    res.send({"reponses":result, "success":true });
 
-
-
-
-// app.post(`/update_to_database`, async (req, res,) => {
-//   let {id, obj, table_name } = req.body;
-//   try {
-//       await db.update(table_name,obj, {id} );
-//       var result = await db.select('*', table_name, {id: id}, "indexed");
-//       res.send({"reponses":result, "id":id,"ok":true})
-
-//   } catch (error) {
-//       res.send({"ok":false, "error":error});
-//   }
-// });
-
-// app.post(`/delete_from_database`, async (req, res,) => {
-//   let {id,table_name} = req.body;
-//   console.log('delete function')
-
-//   try {
-//       await db.delete(table_name,{id});
-//       res.send({"ok":true});
-//       console.log('delete function')
-
-//   } catch (error) {
-//       console.log(error)
-//       res.send({"ok":false, "error":error});
-//   }
-// });
+});
 
 
 
