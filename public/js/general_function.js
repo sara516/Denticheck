@@ -368,7 +368,7 @@ do {
 return (idstr);
 }
 
-async function addFromForm(route, form_selector,storage){
+async function addFromForm(route, form_selector,storage, error_msg){
   var obj = {}
 
   $(form_selector).find('input, textarea, select').each(function () { 
@@ -385,29 +385,40 @@ if(route == '/addnewdocument'){
 console.log(obj)
 var data = await ajax(route, {obj});
 
-if (data.ok) {
+if (data.ok == true) {
+  
+    $('#error').html('')
     $('.popup, #overlay').css('display','block');
     $('.message').html('Ajouté(e) avec succès')
     $('#side_menu_add_container').css('display','none');
+    $('#overlay').css('display', 'none')
+    $('#side_menu').css('display', 'none')
     let id=data.id
     storage[id]=data.reponses[id]
     GV.id_memeberStorage = id
 }else{
-    $('.popup_problem, #overlay').css('display','block');
-    $('.message').html("Un problème s'est produit")
-    $('#side_menu_add_container').css('display','none');
-    console.log(data.error)
-    alert('ça marche pas!')
- }
+    if(data.ok == "message d'erreur"){
+      $('#error').html(error_msg)
+    }else{
+        $('.popup_problem, #overlay').css('display','block');
+        $('.message').html("Un problème s'est produit")
+        $('#side_menu_add_container').css('display','none');
+        console.log(data.error)
+        alert('ça marche pas!')
+    }
+  }
 }
 async function addFromObj(route, obj,storage, action){
 
 var data = await ajax(route, obj);
 
 if (data.ok) {
+  if(action != ""){
     $('.popup, #overlay').css('display','block');
     $('.message').html(`${action} avec succès`)
     $('#side_menu_add_container').css('display','none');
+  }else{  
+  }  
     let id=data.id
     console.log(data.reponses, storage, id)
     storage[id]=data.reponses[id]
@@ -420,17 +431,19 @@ if (data.ok) {
  }
 }
 
-async function  updateFromValues(id,route,storage, delete_function){
+async function  updateFromValues(id,route,storage, delete_function, obj){
 
-  var obj = {}
+  if(obj==undefined){var obj = {}}else{}
   if(route == '/deletedocument'){
     obj['is_deleted'] = 1
   }
   let data = await ajax(route, {id, obj });
   if (data.ok) {
-    $('.popup').css('display','block');
-    $('.message').html(`${delete_function == 'remove' ? 'Supprimé(e)' : 'Modifié(e)'} avec succès`)
-    $('#side_menu_add_container').css('display','none');
+    if(delete_function != ''){
+      $('.popup').css('display','block');
+      $('.message').html(`${delete_function == 'remove' ? 'Supprimé(e)' : (delete_function == 'add'? 'Ajouté(e)' : 'Modifié(e)') } avec succès`)
+      $('#side_menu_add_container').css('display','none');
+    }else{}
     let id=data.id
     storage[id]=data.reponses[id]
   }
@@ -443,7 +456,7 @@ async function  updateFromValues(id,route,storage, delete_function){
   }
 }
 
-async function  updateFromForm(id,route, form_selector,storage){
+async function  updateFromForm(id,route, form_selector,storage, error_msg){
 
 var obj = {}
 $(form_selector).find('input, textarea, select, .btn_create_link').each(function () {
@@ -470,11 +483,15 @@ if (data.ok) {
   storage[id]=data.reponses[id]
 }
 else{
-  $('.popup_problem, #overlay').css('display','block');
-  $('.message').html("Un problème s'est produit")
-  $('#side_menu_add_container').css('display','none');
-    console.log(data.error)
-  alert('ça marche pas!')
+  if(data.ok == "message d'erreur"){
+    $('#error').html(error_msg)
+  }else{
+      $('.popup_problem, #overlay').css('display','block');
+      $('.message').html("Un problème s'est produit")
+      $('#side_menu_add_container').css('display','none');
+      console.log(data.error)
+      alert('ça marche pas!')
+  }
 }
 }
 
@@ -615,8 +632,16 @@ function displaySide(arr, side, exit, object, id, id_delete){
           </div>
         </div>
         ` 
+     
         $('.form_container').append(inputHtml)
-      }else{
+        if(array.type == "date" && id!=undefined){
+          document.getElementById(array.id).valueAsDate =new Date(object[data_id]);
+        }else{}
+        if(array.type1 == "date" && id!=undefined){
+          document.getElementById(array.id1).valueAsDate =new Date(object[data_idgrid]);
+        }else{}
+      }
+      else{
 
     }
 

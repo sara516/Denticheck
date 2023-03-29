@@ -163,14 +163,19 @@ db_module.get_where_clause= function (where){
 
         db_module.foreach(where, function(index, value){
             if(value == undefined){return true;}
-            if(txt!=""){txt+=` AND `; }
-            var negation="";
-            if(value[0] == "!"){negation="!"; value=value.replace('!','');}
 
+            if(txt!="" ){txt+=` AND `;console.log("1") }
+            var negation="";
+            if(value[0] == "!" && value != "IS NULL"){negation="!"; value=value.replace('!','');}
+            if(value == "IS NULL"){txt+=`${index} IS NULL `}
             if(typeof value == 'number'){
                 txt+=`${index} ${negation}= ${value} `;
             }else{
-                txt+=`${index} ${negation}= "${value}" `;
+                if(value != "IS NULL"){
+                    txt+=`${index} ${negation}= "${value}" `;
+                }else{
+                    
+                }
             }
         });
         txt=` WHERE ${txt} `;
