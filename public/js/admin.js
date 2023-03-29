@@ -84,7 +84,7 @@ GV.initialize_page.document = async function(){
 
   GV.documents = {}
   searchBar(".btn_edit_document")
-  await load_items('#document', "/loaddocument",{})
+  await load_items('#document', "/loaddocument")
   displayDocuments()
 
 }
@@ -184,122 +184,340 @@ GV.initialize_page.document = async function(){
 GV.initialize_page.licences = async function(){
   searchBar(".table_items")
   displayPlaceholder()
-  GV.groups = {}
-  GV.companies = {}
-  await load_items('#companies', "/loadCompaniesGroupes" ,{})  
-  await load_items('#licences', "/loadLicences" ,{})
-  
-  displayLicences()
+  await load_items('#licences', "/loadGroupes")
+  await load_items('current', "/loadDesignationsLicence")
+  displayListGroupLicence()
+  GV.index_licence = 1
 }
 
-function displayLicences(){
-  for(let id of Object.keys(GV.licences)){
-    let licence = GV.licences[id]
 
-    const date1 = new Date(moment(licence.start_date).format('YYYY-MM-DD'));
-    const date2 = new Date(moment(licence.end_date).format('YYYY-MM-DD'));
+  onClick('#add_new_group', function(){
+    $('#overlay').css('display', 'grid')
+    $('#side_menu').css('display', 'grid')
+    displaySideGroups()
+  })
+  onClick('#edit_group', function(e){
+    e.stopPropagation()
+    let id = $(this).data('id')
+    $('#overlay').css('display', 'grid')
+    $('#side_menu').css('display', 'grid')
+    displaySideGroups(id, GV.groups)
+  })
+  
+  function displaySideGroups(id, obj, remove){
+    var side = {id : "form_group", title_add: "Ajouter Un dossier de Licence" , title_update: "Modifier le dossier de Licence",  btn_add: "add_group" , btn_update: "update_group", data_id : id }
+    var arr = [
+      {data_id : 'name', class : 'required' , selector : 'input', type : 'text', label : "Nom du dossier de licence", id : '', placeholder :"Nom" }
+      ,{data_id : 'email', class : 'required' , selector : 'input', type : 'email', label : "Adresse e-mail du dossier", id : ''},
+      {data_id : 'password', class : 'required' , selector : 'input', type : 'password', label : "Mot de passe ", id: 'group_password'},   
+    ]
+    if(id == undefined){
+      displaySide(arr, side,'side')
+    }else{
+      displaySide(arr, side,'side', obj[id], id, remove)
+    }
+  }
 
-    const diffInMs = Math.abs(date2 - date1);
-    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+  onClick('#add_group', async function(){
+    if (!check_form("#form_group")) {
+      return;
+    }
+    await addFromForm('/addnewgroup', '#form_group', GV.groups, 'Cette adresse e-mail existe déjà')
+    displayListGroupLicence()
+  })
+  onClick('#update_group', async function(){
+    if (!check_form("#form_group")) {
+      return;
+    }
+    let id = $(this).data('id')
+    await updateFromForm(id, '/editgroup', '#form_group', GV.groups,'Cette adresse e-mail existe déjà')
+    displayListGroupLicence()
+    
+    $('#overlay').css('display', 'none')
+    $('#side_menu').css('display', 'none')
+  })
 
-    let html = `
-    <div  class="table_items grid colmn7 padding_top15 text_color1 center ">
-        <div class=" text_color3">${licence.id_company == null ? GV.groups[licence.id_group].name : GV.companies[licence.id_company].name}</div>       
-        <div class=" text_color10">${licence.id_company == null ? `${GV.groups[licence.id_group].country} ${GV.groups[licence.id_group].region}` : `${GV.companies[licence.id_company].country} ${GV.companies[licence.id_company].region}`}</div>     
-        <div class=" text_color10">${licence.type}</div>     
-        <div class=" text_color10">${moment(licence.start_date).format('DD/MM/YYYY')}</div>     
-        <div class=" text_color10">${moment(licence.end_date).format('DD/MM/YYYY')}</div>     
-        <div class=" text_color10">${diffInDays}</div>     
-      <div>
-          <div class="dropdown">
-            <i class="fas fa-ellipsis-v dropbtn dropbtn_licence" data-id="${licence.id}" style="font-size: 20px;padding: 10px;"></i>
-            <div id="myDropdown_licence_${licence.id}" class="dropdown-content">
-            <div class="action" id="edit_licence"><i class="fa-solid fa-info light_grey padding5"></i>Modifier</div>
+  function displayListGroupLicence(){
+    $('#list_compnay_licences').html('')
+    for(let id of Object.keys(GV.groups)){
+      let group = GV.groups[id]
+      let html = `
+      <div  class="group_licence table_items grid colmn3 padding_top15 text_color1 center" data-id="${group.id}">
+          <div class="blod text_color10 padding15">${group.name}</div>     
+          <div class="blod text_color10 padding15">${group.email}</div>     
+          <div>
+              <div class="dropdown">
+                <i class="fas fa-ellipsis-v dropbtn dropbtn_group" data-id='${group.id}'  style="font-size: 20px;padding: 10px;"></i>
+                <div id="myDropdown_group_${group.id}" class="dropdown-content">
+                  <div id="assign_companies" class="action" data-id="${group.id}"><i class="fa-solid fa-info light_grey padding5"></i>Assigner des enreprises</div>
+                  <div id="edit_group" class="action" data-id="${group.id}"><i class="far fa-edit light_grey padding5"></i>Modifier le groupe</div>
+
+                </div>
+              </div>
+          </div>  
+      </div>`
+
+      $('#list_compnay_licences').append(html)
+    }
+  }
+  onClick('.dropbtn_group', function (e) {
+    e.stopPropagation()
+    let id= $(this).data("id")
+    $('.dropdown-content').removeClass('show')
+    document.getElementById(`myDropdown_group_${id}`).classList.toggle("show"); 
+  });
+
+  onClick('#assign_companies',async function (e) {
+    
+    e.stopPropagation()
+    let id = $(this).data('id')
+    await load_items('current', "/loadCompaniesDontAssign")
+    $('#overlay').css('display', 'grid')
+    $('#side_menu').css('display', 'grid')
+    displaySideCompaniesSuggestion(id)
+
+  });
+  function displaySideCompaniesSuggestion(dataId){
+    GV.companiesIdSelected = []
+    $('#side_menu').html('')
+
+    let html = `  
+        <div class="header_side_menu">
+          <div id="skip_btn" class="exit"><i class="fas fa-chevron-left "></i></div>
+          <div class="title">${dataId== undefined ? "Liste des entreprises assignées à ce groupe" : 'Liste des entreprise à assigner'}</div>
+        </div>
+        <div class="body_side_menu">
+          <div id="form_companies_assign" class="form_container">
+          </div>        
+          <div id="error"></div>
+        </div>
+        <div class="footer_side_menu ${dataId== undefined ? "none" : ""}">
+          <div class="buttons_container cursor " style="" >
+            <div id="${dataId== undefined ? "" : 'valid-update-companies-assign'}" data-element="" data-id="${dataId== undefined ? "" : dataId}" class="btn button text_color3 cursor text_center primary_color_btn" >Valider</div>
           </div>
         </div>
-      </div>  
+        `
+    $('#side_menu').html(html) 
+      if(jQuery.isEmptyObject(GV.companies)){
+        let html= `
+        <div class="empty-content">
+          <p>Aucune entreprise</p>
+        </div>
+        
+        `
+        $('#form_companies_assign').html(html)
+      }else{
+        for(let id of Object.keys(GV.companies)){
+          let company = GV.companies[id]
+          let html= `
+                <div class="cursor ${dataId== undefined ? "add_new_licence" : 'companies_box'} tw-rounded tw-h-full tw-bg-background-base margin_top15" data-id='${company.id}'>
+                    <div class=" padding15 d-flex tw-flex-col tw-h-full tw-justify-between"> 
+                      <div class="as-label-3 tw-text-grey-base mb-1">
+                      ${company.country}, ${company.region} 
+                      </div>
+                      <div class="as-h6">${company.name} </div>
+                    </div>
+                    <div>
+                     
+                    </div>
+                </div>
+          `
+          $('#form_companies_assign').append(html)
+        } 
+      }
+  }
+
+  onClick('.companies_box',async function (e) {
+
+   let id = $(this).data('id')
+   if($(this).hasClass('selected_company_assing')){
+      $(this).removeClass('selected_company_assing') 
+      GV.companiesIdSelected = GV.companiesIdSelected.filter(item => item !== id);
+   }else{
+    $(this).addClass('selected_company_assing') 
+    GV.companiesIdSelected.push(id)
+   }
+
+  });
+  onClick('#valid-update-companies-assign',async function (e) {
+    let element = GV.companiesIdSelected
+    let id = $(this).data('id')
+    await updateFromValues(id,'/edit_assign_companies',GV.companies,"add", element )
+    $('#overlay').css('display', 'none')
+    $('#side_menu').css('display', 'none')
+  });
+
+  onClick('.group_licence',async function (e) {
+    
+    e.stopPropagation()
+    let id = $(this).data('id')
+    GV.companies = {}
+    await load_items('current', "/loadCompaniesAssignToGroup", id)
+    $('#overlay').css('display', 'grid')
+    $('#side_menu').css('display', 'grid')
+    displaySideCompaniesSuggestion()
+  });
+
+  onClick('.add_new_licence',async function (e) {
+    e.stopPropagation()
+    let id = $(this).data('id')
+    $('.add_new_licence').removeClass('selected-color')
+    $(this).addClass('selected-color')
+    $('#side_menu').addClass('left20vw')
+    $('#right_side_menu').css('display', 'flex')
+    displayLicenceCompany(id)
+    
+  });
+  onClick('#add_licence',async function (e) {
+    e.stopPropagation()
+    let index = GV.index_licence++
+    let id = $(this).data('id')
+    let html= `
+    <div class="input-container item_content form_container box_licence_${index}" style="margin: 15px auto;border-radius: 5px;padding: 10px; color: #25505e;border: 1px solid #8080804f;">
+    <div  style=" text-align: end; color: #25505e"><i data-id="${index}" class="fa-solid fa-trash remove_form_licence cursor"></i> </div>
+   
+      <div class="grid colmn2 gap-10">
+        <div>
+          <div class="label">Date de début *</div>
+          <input data-id="start-date" type="date" id="start-date${index}" class="content_editable required"></input>
+        </div>
+        <div>
+          <div class="label">Date de fin *</div>
+          <input data-id="end-date" type="date" id="end-date${index}" class="content_editable required"></input>
+        </div>
+      </div>
+      <div class="label">Désignation *</div>
+      <select id="liste_designation${index}" type="text"  class="section-options content_editable required"  data-id="id_designation" contenteditable="true" > 
+             
+      </select>
+
+      <div style=" font-size: 20px ; text-align: end; color: #1aae93; padding: 10px; margin: auto;font-weight: 600; ">  <i id="insert_new_licence" data-id="${id}" data-index="${index}"  class="fa fa-check cursor"></i>  </div>
     </div>
-
+    
     `
-    $('#list_licences').prepend(html)
+    $('.box_add_licence').append(html)
+    
+    $(`#liste_designation${index}`).html('')
+    $(`#liste_designation${index}`).prepend(`<option value="" selected="true" disabled="disabled">Sélectionner une valeur</option>`)
+    for(element of Object.values(GV.designations)){
+      let html = `<option value="${element.id}">${element.name} , ${element.unit_price}</option> `
+      $(`#liste_designation${index}`).append(html)
+    }   
+    
+    
+  });
+
+  onClick('.remove_form_licence', function (e) {
+    e.stopPropagation()
+    let data =$(this).data('id')
+    $(`.box_licence_${data}`).remove();
+  });
+
+  onClick('.desable_licence', async function (e) {
+    e.stopPropagation()
+    let id =$(this).data('id')
+    await updateFromValues(id,'/desableLicence',GV.licences, "")
+    loopingLincences()
+
+  });
+
+  onClick('.enable_licence', async function (e) {
+    e.stopPropagation()
+    let id =$(this).data('id')
+    await updateFromValues(id,'/enableLicence',GV.licences, "")
+    loopingLincences()
+
+  });
+
+  onClick('#insert_new_licence', async function (e) {
+    e.stopPropagation()
+    let data =$(this).data('id')
+    let index =$(this).data('index')
+
+    let obj = { 
+      start_date: $(`#start-date${index}`).val(),
+      end_date : $(`#end-date${index}`).val(),
+      id_designation: $(`#liste_designation${index}`).val(),
+      id_company: data ,
+     }
+    await addFromObj('/addnewLicence',  {obj}, GV.licences, '')
+    $(`.box_licence_${index}`).remove();
+    loopingLincences()
+  });
+
+  function loopingLincences(){
+    $('#licences_boxs').html('')
+    for(let element of Object.values(GV.licences)){
+ 
+      let today=  moment(new Date()).format('YYYY-MM-DD')
+      let start =moment(element.start_date).format('YYYY-MM-DD')
+      let end =moment(element.end_date).format('YYYY-MM-DD')
+      console.log(checkDate(today, start, end).status)
+      let html = `
+      <div class=" box_licence_content cursor tw-rounded margin_top15 d-flex justify-between" style="${element.is_valid == "1" ? `background-color: ${checkDate(today, start, end).light}` : " border: 1px solid #e8e8e8"} ; height: fit-content;" >
+           ${checkDate(today, start, end).status == "during" ? `<div class="${element.is_valid == '1' ? 'desable_licence' : 'enable_licence'} shadow" data-id="${element.id}">${element.is_valid == "1" ? "Désactiver" : 'Réactiver'}</div>`: ''}
+  
+          <div class=" padding15 d-flex tw-flex-col tw-justify-between"> 
+            <div class="as-h6 ">
+            ${GV.designations[element.id_designation].name}
+            </div>
+            <div class="as-label-3 tw-text-grey-base mb-1 bold">${moment(element.start_date).format('DD/MM/YYYY')} à ${moment(element.end_date).format('DD/MM/YYYY')}  </div>
+          </div>
+          <div style="margin: auto; color:  ${checkDate(today, start, end).dark}; font-weight: 700;">
+          ${checkDate(today, start, end).time}
+          </div>
+      </div>
+      `
+       $('#licences_boxs').prepend(html)
+    }
   }
-}
-onClick('.dropbtn_licence', function (e) {
-  e.stopPropagation()
-  let id= $(this).data("id")
-  $('.dropdown-content').removeClass('show')
-  document.getElementById(`myDropdown_licence_${id}`).classList.toggle("show"); 
-});
+ 
+  async function displayLicenceCompany(id){
+    GV.licences = {}
+    await load_items('current', "/loadLicenceCompany", id)
+    $('#right_side_menu').html('')
+    $('#right_side_menu').prepend('<div id="licences_boxs"></div>')
+    
+    loopingLincences()
+    let header = `
+    <div class="box_add_licence"></div>
+    <div id="add_licence" class="cursor bold" style="color: #0075eb ;margin: 15px 0px;" data-id='${id}'>+ Ajouter une nouvelle licence</div>
+    `
+    $('#right_side_menu').append(header)
 
-onClick('#add_licence', async function(){
-  $('#overlay').css('display', 'grid')
-  $('#side_menu').css('display', 'grid')
-  GV.groups = {}
-  GV.companies = {}
-  GV.designations = {}
-  await load_items('#companies', "/loadCompaniesGroupes" ,{})  
-  await load_items('current', "/loadDesignationsLicence" ,{})
-
-  displaySideLicence()
-})
-
-function displaySideLicence(id, obj, remove){
-
-  let groupArr = []
-  let articleArr = []
-  for(let element of Object.keys(GV.groups)){
-    let group = GV.groups[element]
-    let html = {value : group.id , html : `${group.name}, Groupe`}
-    groupArr.push(html)
-  }for(let idcompany of Object.keys(GV.companies)){
-    let company = GV.companies[idcompany]
-    let html = {value : company.id , html : `${company.name}, Entreprise`}
-    groupArr.push(html)
-  }for(let article of Object.keys(GV.designations)){
-    let designation = GV.designations[article]
-    let html = {value : designation.id , html : `${designation.name}, ${designation.unit_price} €`}
-    articleArr.push(html)
   }
 
+  function getDaysBetweenDates(startDate, endDate) {
+    var start = new Date(startDate);
+    var end = new Date(endDate);
+    var oneDay = 24 * 60 * 60 * 1000; // number of milliseconds in one day
+    var diffDays = Math.round(Math.abs((start.getTime() - end.getTime()) / oneDay));
+    return diffDays;
+  }
 
-  var side = {id : "form_licence", title_add: "Ajouter Une Licence" , title_update: "Modifier La Licence",  btn_add: "add_valid_licence" , btn_update: "update_licence", data_id : id }
-  var arr = [
-    {id : 'check-box-company',  selector : 'div'},
-    // {data_id : 'id_group', required : 'required' ,selector : 'select', type : 'text', label : "Séléctionner un groupe", uniqueClass: "list-groups" ,id: 'list-groups', option : groupArr},
-    {class:"grid",  data_id : 'start_date',  selector : 'input', type : 'date', label : "Date du début de la licence", id : '', placeholder :"Début" ,data_idgrid : 'end_date', class1 : 'required' , selector1 : 'input', type1 : 'date', label1 : "Date de fin de la licence", id1 : '', placeholder1 :"Date de fin" } ,
-    {data_id : 'id_designation', required : 'required' ,selector : 'select', type : 'text', label : "Séléctionner une désignations ( offre )", uniqueClass: "list-articls" ,id: 'list-articls', option :articleArr},
-  ]
-  if(id == undefined){
-    displaySide(arr, side,'side')
-    $('#check-box-company').html(`
-    <form>
-      <label>
-        <input type="checkbox" name="option1"> Option 1
-      </label>
-      <br>
-      <label>
-        <input type="checkbox" name="option2"> Option 2
-      </label>
-    </form>
-    `)
-  }else{
-    displaySide(arr, side,'side', obj[id], id, remove)
+  function checkDate(today, start, end) {
+    var todayDate = new Date(today);
+    var startDate = new Date(start);
+    var endDate = new Date(end);
+  
+    if (todayDate < startDate) {
+
+      let timeDiff = startDate.getTime() - todayDate.getTime();
+      let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)); // convert milliseconds to days
+      return { dark : "#1a60eb" , light :"#edf5fd", time : `${dayDiff}`, status: 'comming'};
+
+    } else if (todayDate > endDate) {
+      return { dark : "#d78e47", light : "#fff0e1", time : "Expirer" , status : 'finished'};
+
+    } else {
+      let timeDiff =  endDate.getTime() - todayDate.getTime() ;
+      let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)); // convert milliseconds to days
+      return  {dark :  "#1aae55",  	light:  "#e7fce9",time : `${dayDiff}`, status : "during"};
+    }
   }
 
   
-}
-onClick('#add_valid_licence', async function(){
-  if (!check_form("#form_licence")) {
-    return;
-  }
-  await addFromForm('/addnewlicence', '#form_licence',GV.licences)
 
-    $('#list_licences').html('')
-    displayLicences() 
-    PlaceholderisEmpty('#licences')  
-  $('#overlay').css('display', 'none')
-  $('#side_menu').css('display', 'none')
-})
   //! ///////////////////////////////////////////////////////////
 //! //////////////////!    companies   //////////////////////////
 //! ///////////////////////////////////////////////////////////
@@ -309,7 +527,7 @@ onClick('#add_valid_licence', async function(){
 GV.initialize_page.companies = async function(){
   searchBar(".table_items")
   displayPlaceholder()
-  await load_items('#companies', "/loadCompaniesGroupes" ,{})
+  await load_items('#companies', "/loadCompanies" )
   displayCompanies()
   }
 
@@ -319,12 +537,11 @@ GV.initialize_page.companies = async function(){
     for(let id of Object.keys(GV.companies)){
       let company = GV.companies[id]
       let html = `
-      <div  class="popup_list_operation table_items grid colmn5 padding_top15 text_color1 center" data-element="entreprise" data-id="${company.id}">
+      <div  class="popup_list_operation table_items grid colmn4 padding_top15 text_color1 center" data-element="entreprise" data-id="${company.id}">
           <div class="first_latter padding15" >${company.name.charAt(0).toUpperCase()}</div>       
           <div class="blod text_color10 padding15">${company.name}</div>     
           <div class="blod text_color10 padding15">${company.region}, ${company.country}</div>     
-          <div class="blod text_color10 padding15">${company.code_postal}</div>   
-          <div class="blod text_color10 padding15">Entreprise ${company.id_group == null ? '' : `Du groupe ${GV.groups[company.id_group].name} `}</div>   
+          <div class="blod text_color10 padding15">${company.code_postal}</div>  
           <div>
               <div class="dropdown">
                 <i class="fas fa-ellipsis-v dropbtn dropbtn_company" data-id='${company.id}'  style="font-size: 20px;padding: 10px;"></i>
@@ -337,28 +554,6 @@ GV.initialize_page.companies = async function(){
       </div>
       `
       $('#list_companies').append(html)
-    }for(let id of Object.keys(GV.groups)){
-      let group = GV.groups[id]
-      let html = `
-      <div  class="popup_list_operation table_items grid colmn5 padding_top15 text_color1 center "  data-element="group" data-id="${group.id}">
-          <div class="first_latter padding15">${group.name.charAt(0).toUpperCase()}</div>       
-          <div class="blod text_color10 padding15">${group.name}</div>     
-          <div class="blod text_color10 padding15">${group.region}, ${group.country}</div>     
-          <div class="blod text_color10 padding15">${group.code_postal}</div>   
-          <div class="blod text_color10 padding15">Groupe</div>   
-          <div>
-              <div class="dropdown">
-                <i class="fas fa-ellipsis-v dropbtn dropbtn_group" data-id='${group.id}'  style="font-size: 20px;padding: 10px;"></i>
-                <div id="myDropdown_group_${group.id}" class="dropdown-content">
-                <div class="action detail_edit_company" data-element="group" data-id="${group.id}"><i class="fa-solid fa-info light_grey padding5"></i>Modifier</div>
-                <div class="action stat_company" data-id='${company.id}' data-element="group"><i class="fa-solid fa-info light_grey padding5"></i>Voir les statistiques</div>
-              </div>
-            </div>
-          </div>  
-       
-      </div>
-      `
-      $('#list_companies').append(html)
     }
   }
   onClick('.dropbtn_company', function (e) {
@@ -367,43 +562,29 @@ GV.initialize_page.companies = async function(){
     $('.dropdown-content').removeClass('show')
     document.getElementById(`myDropdown_company_${id}`).classList.toggle("show"); 
   });
-  onClick('.dropbtn_group', function (e) {
-    e.stopPropagation()
-    let id= $(this).data("id")
-    $('.dropdown-content').removeClass('show')
-    document.getElementById(`myDropdown_group_${id}`).classList.toggle("show"); 
-  });
-
 
   onClick('#add_new_company', function(){
     $('#overlay').css('display', 'grid')
     $('#side_menu').css('display', 'grid')
     displaySideCompany()
-
   })
  
   onClick('.stat_company', async function(e){
     e.stopPropagation()
-    var element = $(this).data('element')
     var id = $(this).data('id')
     $('#overlay').css('display', 'grid')
     $('#side_menu_container').css('display', 'grid')
     
-    await displaySideDetailFolder(id, element)
+    await displaySideDetailFolder(id)
   })
 
-  async function displaySideDetailFolder(id, element){
+  async function displaySideDetailFolder(id){
     
     GV.files = {}
-    await load_items('#side_menu_container', "/loadfiles" ,{id_company: id, cancel_status: '0', imported: '0'})
+    // await load_items('#side_menu_container', "/loadfiles" ,{id_company: id, cancel_status: '0', imported: '0'})
+    await load_items('#side_menu_container', "/loadfiles" ,id)
 
-    if(element == "entreprise"){
-      var data = GV.companies[id]
-    }else{
-      var data = GV.groups[id]
-    }
-    var name =data.name 
-    
+    var name =GV.companies[id].name 
     const files = Object.values(GV.files)
     let resType = groupElementBy(files, "type")
     // let paiement = groupElementBy(files, "status")
@@ -435,9 +616,7 @@ GV.initialize_page.companies = async function(){
   
       }if(file.type == "Facture" && file.status == "Versement"){
         arrVersement.push('1');
-  
       }else{
-        
       }
     }
     
@@ -566,28 +745,14 @@ GV.initialize_page.companies = async function(){
 
     $('#overlay').css('display', 'grid')
     $('#side_menu').css('display', 'grid')
-    console.log($(this).data('element') , id, GV.groups)
-
-    if($(this).data('element') =="group"){
-      displaySideCompany(id, GV.groups, 'delete_document', 'group')
-    }else{
-      displaySideCompany(id, GV.companies, 'delete_document', 'company')
-    }
+    displaySideCompany(id, GV.companies, 'delete_document')
+    
   })
 
 
-  function displaySideCompany(id, obj, delete_funtion, element){
-    let groupArr = []
-    for(let element of Object.keys(GV.groups)){
-      let group = GV.groups[element]
-      let html = {value : group.id , html : group.name}
-      groupArr.push(html)
-    }
-
+  function displaySideCompany(id, obj, delete_funtion){
     var side = {id : "form_company", title_add: "Ajouter Une Entreprise" , title_update: "Modifier L'entreprise",  btn_add: "add_company" , btn_update: "update_company", data_id : id }
     var arr = [
-      {data_id : '', required : 'required' , selector : 'select', type : 'text', label : "Type de l'Entreprise", id: 'company-type', option : [{value : "group" , html : 'Un Groupe'}, {value : "company" , html : 'Une Entreprise '}, {value : "company-of-group" , html : "Une Entreprise faisant partie d'un groupe"}, ]},   
-      {data_id : '', required : 'required' ,selector : 'select', type : 'text', label : "Séléctionner un groupe", uniqueClass: "list-groups" ,id: 'list-groups', option : groupArr},
       {data_id : 'name',required : 'required' , selector : 'input', type : 'text', label : "Raison sociale", id : '', placeholder: 'Raison sociale'},
       {data_id : 'siret_number', selector : 'input', type : 'text', label : "SIRET", id: '', placeholder: 'SIRET'}, 
       {class: 'grid', data_id : 'country', selector : 'input', type : 'text', label : "Pays", id: '', placeholder: 'Pays' , data_idgrid : 'address', selector1 : 'input', type1 : 'text', label1 : "Adresse", id1: '', placeholder1: 'Adresse'}, 
@@ -598,57 +763,17 @@ GV.initialize_page.companies = async function(){
      
     ]
     if(id == undefined){
-      displaySide(arr, side,'side')    
-      $('.list-groups').hide()
+      displaySide(arr, side,'side')  
     }else{
       displaySide(arr, side,'side', obj[id], id, delete_funtion)
-      
-      if(element == 'group'){
-        $('#company-type').val('group')
-        $('.list-groups').hide()
-        $('#list-groups').removeClass('required')
-        $('#update_company').removeData('element')  
-        $('#update_company').data( "element", "group" );
-      }else{
-        $('#update_company').removeData('element')  
-        $('#update_company').data( "element", "company" );
-        if(obj[id].id_group == null){
-          $('#company-type').val('company')
-          $('.list-groups').hide()
-          $('#list-groups').removeClass('required')
-        }else{
-          $('#company-type').val('company-of-group')
-          $('#list-groups').show().addClass('required')
-          $('#list-groups').val(obj[id].id_group)
-        }
-      }
-
     }
   }
-
-  $(document).on('change','#company-type', async function(){
-    let value = $(this).val()
-    if(value == "company-of-group"){
-      $('#list-groups').data( "id", "id_group" );
-      $('#list-groups').addClass( "required" );
-      $('.list-groups').show();
-    }else{
-      $('#list-groups').removeData('id')      
-      $('#list-groups').removeClass( "required" );
-      $('.list-groups').hide()
-    }
-  })
 
   onClick('#add_company', async function(){
     if (!check_form("#form_company")) {
       return;
     }
-   
-    if( $('#company-type').val() == 'group'){
-      await addFromForm('/addnewgroup', '#form_company',GV.groups)
-    }else{
-      await addFromForm('/addnewcompany', '#form_company',GV.companies)
-    }
+    await addFromForm('/addnewcompany', '#form_company',GV.companies)
     if(GV.page_name == 'companies'){
       $('#list_companies').html('')
       displayCompanies ()  
@@ -665,11 +790,7 @@ GV.initialize_page.companies = async function(){
     if (!check_form("#form_company")) {
       return;
     }
-    if($('#update_company').data('element') =='group'){
-      await updateFromForm(id,'/updategroups', '#form_company',GV.groups)
-    }else{
-      await updateFromForm(id,'/updatecompany', '#form_company',GV.companies)
-    }
+    await updateFromForm(id,'/updatecompany', '#form_company',GV.companies)
     $('#list_companies').html('')
     displayCompanies ()
     PlaceholderisEmpty('#companies')
@@ -684,36 +805,26 @@ onClick('.popup_list_operation', async function () {
   $('.modal-dialog_details').css('display', 'block')
   $('.modal_details').css('display', 'block')
   var id = $(this).data('id')
-  var element = $(this).data('element')
   GV.id_folder_detail= id
-
-  displayListeOperation(id, element)
+  displayListeOperation(id)
 });
 
 
-async function displayListeOperation(id, element){
+async function displayListeOperation(id){
   GV.operations = {}
-  
-  if(element == "entreprise"){
-    console.log(element, "entreprise")
-    await load_items('.modal-body_details', "/loadOperationscompanies" ,{id_company: id})
+  await load_items('.modal-body_details', "/loadOperationscompanies" ,id)
 
-  }else{
-    
-    console.log(element)
-    await load_items('.modal-body_details', "/loadOperationscompanies" ,{id_group: id})
-  }
   $('.modal-dialog_details').html("")
   html=
    `  <div class="modal-content_details exposant_page">
           <div class="modal-header_details center">
           
           <div class="" > 
-            <button id="add_new_operation" data-id="${id}" data-element="${element}">
+            <button id="add_new_operation" data-id="${id}" >
               <span>Ajouter</span>
             </button>                    
           </div>
-          <div class="blod text_color3" style="padding: 2px;font-size: 20px; ">${element == "entreprise" ? GV.companies[id].name : GV.groups[id].name}</div>
+          <div class="blod text_color3" style="padding: 2px;font-size: 20px; ">${GV.companies[id].name} </div>
           <div id="details_skip" class="exit"><i class="fa fa-times exit" style='color: rgb(165 165 165) !important;'></i></div>
           </div>
 
@@ -728,10 +839,10 @@ async function displayListeOperation(id, element){
 
 
   $('.modal-dialog_details').html(html)
-  displayContentOperation(id, element)
+  displayContentOperation(id)
 }
 
-function displayContentOperation(id, element){
+function displayContentOperation(id){
   
   $('.modal-body_details_content').html("")
   html_header = `
@@ -746,7 +857,7 @@ for(let id of Object.keys(GV.operations)){
   var operation = GV.operations[id]
    html_content = `
 
-  <div  class="table_items grid colmn3 padding_top15 text_color1 cursor center" id="detail_operation" data-element="${element}"  data-client="${id_company}" data-id="${operation.id}">
+  <div  class="table_items grid colmn3 padding_top15 text_color1 cursor center" id="detail_operation"  data-client="${id_company}" data-id="${operation.id}">
    <div class="blod text_color3">${operation.name}</div>     
    <div class=" text_color10">${moment(operation.date_created).format('DD MMMM YYYY h:mm:ss')}</div>
    <div>
@@ -761,10 +872,9 @@ for(let id of Object.keys(GV.operations)){
 
 
   `
-
-$('.modal-body_details_content').append(html_content)
+  $('.modal-body_details_content').append(html_content)
 }
-$('.modal-body_details_content').prepend(html_header)
+  $('.modal-body_details_content').prepend(html_header)
 }
 
 onClick('.dropbtn_operation', function (e) {
@@ -787,21 +897,18 @@ onClick('#edit_side_operation', function(e){
 onClick('#detail_operation', async function () { 
   var id =  $(this).data('id')
   var id_client =  $(this).data('client')
-  var element = $(this).data('element')
-  displayListFiles(id, id_client, element)
+  displayListFiles(id, id_client)
 });
 onClick('#back_operation', async function () { 
-
   var id = $(this).data('id')
-  var element = $(this).data('element')
-  displayListeOperation(id, element)
+  displayListeOperation(id)
 });
 
-async function displayListFiles(id, id_client, element){
+async function displayListFiles(id, id_client){
   GV.files = {}
   GV.payment = {}
   var id_operation = id
-  await load_items('#modal-body_details_content', "/loadfiles" ,{id_operation: id_operation})
+  await load_items('#modal-body_details_content', "/loadfilesOfOperation" ,id_operation)
 
 
    $('.modal-dialog_details').html("")
@@ -810,7 +917,7 @@ async function displayListFiles(id, id_client, element){
     `
        <div class="modal-content_details exposant_page">
            <div class="modal-header_details">
-           <div id="back_operation" data-element="${element}" data-id="${id_client}"><i class="fa-solid fa-angle-left " style='color: rgb(165 165 165) !important;'></i></div>
+           <div id="back_operation"  data-id="${id_client}"><i class="fa-solid fa-angle-left " style='color: rgb(165 165 165) !important;'></i></div>
            <div id="importe_bon_de_commade" data-id="${id_client}" data-operation="${id}" class="button text_center cursor bold " style=" font-size: 15px;    color: #1f8a90;  border: 1px solid #1f8990; padding: 15px 35px;">Importer un bon de commande</div>
            <div id="" class="exit"><i class="fa fa-times exit" style='color: rgb(165 165 165) !important;'></i></div>
            </div>
@@ -837,10 +944,9 @@ async function displayListFiles(id, id_client, element){
  `
    for(let id_file of Object.keys(GV.files)){   
     
-      GV.payment = {}
+     GV.payment = {}
      var file = GV.files[id_file]
-  
-     await load_items('#modal-body_details_content', "/loadpayment", {id_file : file.id})
+     await load_items('#modal-body_details_content', "/loadpayment", file.id)
 
      $('#side_menu').html("")
      let values = totalFildeValue(file.id)
@@ -864,13 +970,13 @@ async function displayListFiles(id, id_client, element){
       <div class="dropdown" >
           <i class="fas fa-ellipsis-v dropbtn dropbtn_file" data-id="${file.id}" style="font-size: 20px;padding: 10px;    z-index: 500!important; "></i>
           <div id="myDropdown_file_${file.id}" class="dropdown-content"  >
-          <div class="action" id="print_crm_file" data-element="${element}" data-id="${file.id}" data-><i class="fa-solid fa-print light_grey padding5"></i>Imprimer</div>
-          <div class="action" id="download_crm_file" data-element="${element}" data-id="${file.id}"><i class="fa-solid fa-download light_grey padding5"></i>Télécharger</div>
-          <div class="action" id="update_invoice_document" data-element="${element}" data-client=${id_client} data-idparam=${id}  style="display: ${ file.type != "Facture_proforma" || file.invoice == '1' ? 'none !important' : ""}" data-id="${file.id}"><i class="fas fa-edit light_grey padding5"></i>Transformer facture</div>
-          <div class="action " id="edit_facture_status" data-element="${element}" data-operateur="${id_operation}" data-client="${id_client}" data-id="${file.id}" style="display:${file.type == "Facture" && file.status != 'Payée' ? `${file.cancel_status == '1'  ? 'none !important' : "block"}`: "none !important" }"><i class="far fa-edit light_grey  light_grey padding5"></i>Modifier le paiement</div>
-          <div class="action " id="liste_payment" data-element="${element}" style="display: ${file.cancel_status == '1' ||  file.type != "Facture" ? 'none !important' : ""}"   data-id="${file.id}" style="display:${file.type == "Facture" ? "block" : "none !important" }"><i class="fa-sharp fa-solid fa-list light_grey  light_grey padding5"></i>Liste des paiements</div>
-          <div class="action" id="send_mail_document" data-element="${element}" style="display: ${file.cancel_status == '1' || file.imported == '1'? 'none !important' : ""}" data-id="${file.id}"><i class="fas fa-sign-out-alt  light_grey padding5"></i>Envoyer mail</div>
-          <div class="action admin_access " id="cancel_file" data-element="${element}" style="display: ${file.cancel_status == '1'||  file.type != "Facture"  ? 'none !important' : ""}" data-client=${id_client} data-idparam=${id}  data-id="${file.id}"><i class="fas fa-edit light_grey padding5"></i>Annuler</div>
+          <div class="action" id="print_crm_file" data-id="${file.id}" data-><i class="fa-solid fa-print light_grey padding5"></i>Imprimer</div>
+          <div class="action" id="download_crm_file" data-id="${file.id}"><i class="fa-solid fa-download light_grey padding5"></i>Télécharger</div>
+          <div class="action" id="update_invoice_document" data-client=${id_client} data-idparam=${id}  style="display: ${ file.type != "Facture_proforma" || file.invoice == '1' ? 'none !important' : ""}" data-id="${file.id}"><i class="fas fa-edit light_grey padding5"></i>Transformer facture</div>
+          <div class="action " id="edit_facture_status"  data-operateur="${id_operation}" data-client="${id_client}" data-id="${file.id}" style="display:${file.type == "Facture" && file.status != 'Payée' ? `${file.cancel_status == '1'  ? 'none !important' : "block"}`: "none !important" }"><i class="far fa-edit light_grey  light_grey padding5"></i>Modifier le paiement</div>
+          <div class="action " id="liste_payment" style="display: ${file.cancel_status == '1' ||  file.type != "Facture" ? 'none !important' : ""}"   data-id="${file.id}" style="display:${file.type == "Facture" ? "block" : "none !important" }"><i class="fa-sharp fa-solid fa-list light_grey  light_grey padding5"></i>Liste des paiements</div>
+          <div class="action" id="send_mail_document" style="display: ${file.cancel_status == '1' || file.imported == '1'? 'none !important' : ""}" data-id="${file.id}"><i class="fas fa-sign-out-alt  light_grey padding5"></i>Envoyer mail</div>
+          <div class="action admin_access " id="cancel_file" style="display: ${file.cancel_status == '1'||  file.type != "Facture"  ? 'none !important' : ""}" data-client=${id_client} data-idparam=${id}  data-id="${file.id}"><i class="fas fa-edit light_grey padding5"></i>Annuler</div>
       </div>
     </div>
  
@@ -890,7 +996,6 @@ async function displayListFiles(id, id_client, element){
  onClick('#print_crm_file', async function (e) { 
   e.stopPropagation()
   let id= $(this).data("id")
-  let element= $(this).data("element")
   if(GV.files[id].imported == "1" ){
     window.open(`${GV.url}/img/uploads/${GV.files[id].pdf_version}`);
   }else{
@@ -1011,17 +1116,12 @@ th, td {
 onClick('#add_new_operation', function(e){
   e.stopPropagation()
   var id = $(this).data('id')
-  var element = $(this).data('element')
   $('#overlayTop').css('display', 'grid')
   $('#side_menu').css('display', 'grid')
   var side = {id : "form_operation",title_add: "Ajouter Une Nouvelle Opération" , btn_add: "add_operation" ,data_id : id }
-
-  if(element == 'entreprise'){
-    var data = 'id_company'
-  }else{var data = 'id_group' }
   var arr = [{data_id : 'name', class : 'required' , selector : 'input', type : 'text', label : "Nom de l'opération", id : '', placeholder :"Nom" }, {id : 'id_input',  selector : 'div'},]
   displaySide(arr, side,'popup')  
-  $('#id_input').html(`<input type="hidden" data-id='${data}' value='${id}'>`)
+  $('#id_input').html(`<input type="hidden" data-id='id_company' value='${id}'>`)
 })
 
 
@@ -1037,21 +1137,13 @@ onClick('#add_operation', async function () {
       const datalistOptions = document.querySelector('#search-company');
       const selectedOption = datalistOptions.querySelector(`[value="${inputField.value}"]`);
       if (selectedOption) {
-        var dataId = selectedOption.getAttribute('data-id');
-        var dataElement = selectedOption.getAttribute('data-element');
-        console.log(dataId, dataElement)
+        var id = selectedOption.getAttribute('data-id');
       }
-
     await addFromForm('/addnewoperation', '#form_operation',GV.operations)
     $('#side_menu').css('display','none');
     $('#overlay').css('display','none');
     GV.operations = {}
-    if(dataElement == "company" ){
-      var where = {id_company: dataId}
-    }else{
-      var where = {id_group: dataId}
-    }
-    await load_items('current', "/loadOperationscompanies" , where)
+    await load_items('current', "/loadOperationscompanies" , id)
     displayDropdownOperation()
   }else{    
     await addFromForm('/addnewoperation', '#form_operation',GV.operations)
@@ -1089,8 +1181,8 @@ GV.initialize_page.facturation = async function(){
   GV.groups= {}
   GV.companies= {}
   
-  await load_items('current', "/loadCompaniesGroupes" ,{})
-  await load_items('current', "/loadDesignations" ,{})
+  await load_items('current', "/loadCompanies" )
+  await load_items('current', "/loadDesignations" )
 
   displaybtnFracture('Facture_proforma')
   displayDropdownClient()
@@ -1181,11 +1273,6 @@ $(document).on('change','#facturation_page .deadline_time', async function(){
       let html = `<option data-value='${company.name}' data-id='${company.id}' data-element='company' value="${company.name}"></option>`
       $('#facturation_page .filter_clients').prepend(html)
      }
-     for(let id of Object.keys(GV.groups)){
-      var group=GV.groups[id]
-      let html = `<option data-value='${group.name}' data-id='${group.id}' data-element='group' value="${group.name}"></option>`
-      $('#facturation_page .filter_clients').prepend(html)
-     }
   }
 
   
@@ -1210,17 +1297,18 @@ $(document).on('change','#facturation_page .filter_clients', async function(){
 
     const selectedOption = datalistOptions.querySelector(`[value="${inputField.value}"]`);
       if (selectedOption) {
-        var dataId = selectedOption.getAttribute('data-id');
+        var id = selectedOption.getAttribute('data-id');
         var dataElement = selectedOption.getAttribute('data-element');
-        console.log(dataId, dataElement)
+       
       }
 
+ console.log(id)
   if($('.filter_clients').val()==''){
     $('#filter_operations').css( "display", 'none' );
     console.log($('.filter_clients').val())
   }else{ 
    
-    if(dataId === undefined || dataId === null ){
+    if(id === undefined || id === null ){
       $('.filter_clients').css('border', '1px solid red')
       $('.message_not_find').css('display', 'block')
       $('#filter_operations').css( "display", 'none' ); 
@@ -1230,14 +1318,9 @@ $(document).on('change','#facturation_page .filter_clients', async function(){
       $('.message_not_find').css('display', 'none')
       $('#filter_operations').css( "display", 'block' ); 
       GV.operations = {}  
-      if(dataElement == "company" ){
-        var where = {id_company: dataId}
-      }else{
-        var where = {id_group: dataId}
-      }
-      await load_items('current', "/loadOperationscompanies" , where)
+    
+      await load_items('current', "/loadOperationscompanies" , id)
     }
-
     displayDropdownOperation()  
   }
 })
@@ -1400,13 +1483,10 @@ if($('.filter_clients').val() == ''){
     <div id="details" class="clearfix" style=" font-size: 10px;">
       <div id="client" style="max-width: 275px !important" >
       
-        <h2 class="name"><div>${file.id_folder == '' || file.id_folder == undefined ? " " : GV.folders[file.id_folder].raison_social} ${file.id_folder == '' || file.id_folder == undefined ? " " : GV.folders[file.id_folder].name}</div></h2>
-        <div class="address">${file.id_folder == '' || file.id_folder == undefined  ? " " : GV.folders[file.id_folder].address} ${file.id_folder == '' || file.id_folder == undefined ? " " :GV.folders[file.id_folder].wilaya}</div>
-        <div class="email">${file.id_folder == '' || file.id_folder == undefined  ? " " :GV.folders[file.id_folder].phone}</div>
-        <div class="email">${file.type == "Facture_proforma" ? "" : `NIF :  ${file.id_folder == '' || file.id_folder == undefined ? " " :GV.folders[file.id_folder].nif}` }</div>
-        <div class="email">${file.type == "Facture_proforma" ? "" : `RC : ${file.id_folder == '' || file.id_folder == undefined ? " " :GV.folders[file.id_folder].rc}`}</div>
-        <div class="email">${file.type == "Facture_proforma" ? "" : `AI : ${file.id_folder == '' || file.id_folder == undefined  ? " " :GV.folders[file.id_folder].ai}`}</div>
-        <div class="email">${file.type == "Facture_proforma" ? "" : `NIS: ${file.id_folder == '' || file.id_folder == undefined ? " " :GV.folders[file.id_folder].nis}`}</div>
+        <h2 class="name"><div>${file.id_company == null || file.id_company == undefined ? " " : GV.companies[file.id_company].raison_social} ${file.id_company == null || file.id_company == undefined ? " " : GV.companies[file.id_company].name}</div></h2>
+        <div class="address">${file.id_company == null || file.id_company == undefined  ? " " : GV.companies[file.id_company].address} ${file.id_company == null || file.id_company == undefined ? " " :GV.companies[file.id_company].wilaya}</div>
+        <div class="email">${file.id_company == null || file.id_company == undefined  ? " " :GV.companies[file.id_company].phone}</div>
+        
       </div>
       <div id="company" style=" -webkit-print-color-adjust: exact;">
         <h2 class="name" style=" -webkit-print-color-adjust: exact;">${GV.current_company.raison_social} ${GV.current_company.name}</h2>
@@ -1598,21 +1678,12 @@ onClick('#add_new_operation_facturation', function(){
     const selectedOption = datalistOptions.querySelector(`[value="${inputField.value}"]`);
       if (selectedOption) {
         var dataId = selectedOption.getAttribute('data-id');
-        var dataElement = selectedOption.getAttribute('data-element');
-        console.log(dataId, dataElement)
+        console.log(dataId)
       }
-
-  if(dataElement == 'company'){
-   var data = 'id_company'
-  }else{
-    var data = 'id_group'
-  }
-
   var side = {id : "form_operation",title_add: "Ajouter Une Nouvelle Opération" , btn_add: "add_operation" ,data_id : dataId }
-
   var arr = [{data_id : 'name', class : 'required' , selector : 'input', type : 'text', label : "Nom de l'opération", id : '', placeholder :"Nom" }, {id : 'id_input',  selector : 'div'},]
   displaySide(arr, side,'popup')  
-  $('#id_input').html(`<input type="hidden" data-id='${data}' value='${dataId}'>`)
+  $('#id_input').html(`<input type="hidden" data-id='id_company' value='${dataId}'>`)
 
 })
 
@@ -1628,7 +1699,7 @@ onClick('#add_new_operation_facturation', function(){
 GV.initialize_page.article = async function(){
   searchBar(".table_items")
   displayPlaceholder()
-  await load_items('#article', "/loadDesignations" ,{})
+  await load_items('#article', "/loadDesignations" )
   displayDesignation()
 
   }
@@ -1762,7 +1833,7 @@ GV.initialize_page.users = async function(){
 GV.initialize_page.setting = async function(){
   GV.task_item = 1
   searchBar(".table_items")
-  await load_items('#general-setting', "/loadListTasks", {important : "1"})
+  await load_items('#general-setting', "/loadListTasks")
   displayListTasks()
 
   $('#invoice-setting').hide()    
@@ -1823,7 +1894,7 @@ GV.initialize_page.setting = async function(){
     $('#overlay').css('display', 'grid')
     $('#side_menu').css('display', 'grid')
     GV.tasks = {}
-    await load_items('current', "/loadTasks",{id_list: id})
+    await load_items('current', "/loadTasks", id)
     displaySideListTasks(id, GV.tasklists)
  
   })
@@ -1931,7 +2002,6 @@ GV.initialize_page.setting = async function(){
     let id = $(this).data('id')
     let index = $(this).data('index')
     GV.delete_tasks_array.push(id)
-
     let remove = GV.edit_tasks_array.indexOf(id);
     if (index !== -1) { 
       GV.edit_tasks_array.splice(remove, 1); 
@@ -2132,7 +2202,9 @@ function dropdown(){
 onClick('#overlay, .exit, #valid_not', function(){
   $('#overlay').css('display', 'none')
   $('#overlayTop').css('display', 'none')
-  $('#side_menu').css('display', 'none') 
+  
+  $('#side_menu').removeClass('left20vw')
+  $('#side_menu, #right_side_menu').css('display', 'none') 
   $('#side_menu_container').css('display', 'none') 
   $('.modal-dialog_details').css('display', 'none')
   $('.modal_add').css('display', 'none')
