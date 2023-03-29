@@ -287,6 +287,9 @@ body{width: 100vw;  overflow: hidden; }
 .w100{width: 100%;}
 .w30{width: 30% !important;}
 .h100{height: 100%;}
+.h300px{height: 300px;;}
+.h35{height: 35vh;}
+.hAuto{height: auto;}
 .height20{height: 20px !important; }
 .max-content{height: max-content;}
 
