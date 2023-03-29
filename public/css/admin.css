@@ -830,7 +830,7 @@ html .v-card {
   padding: 0.75rem;
 }
 .tw-bg-background-base {
-  background-color: #ffffff;
+  background-color: #f6f7fd;
 }
 .tw-justify-between {
   justify-content: space-between;
@@ -843,8 +843,8 @@ html .v-card {
 }
 .as-label-3, .as-label-4 {
   font-style: normal;
-  font-weight: 700;
-  line-height: 1rem;
+  font-weight: 600;
+  line-height: 1.5rem;;
 }
 .as-label-3 {
   font-size: .875rem;
@@ -931,6 +931,79 @@ html .v-card {
 }
 a{
   text-decoration: none;
+}
+/******************************************** Licence **************************************************************/
+/***********************************                          *************************************************************/
+
+.btn-filter{
+  font-size: 15px; 
+  padding: 10px ; 
+  color: #09b2ad;
+  cursor: pointer;
+}  
+.btn-filter-selected{
+  background-color: #09b2ad;
+  color: white;
+}
+
+.selected-color {
+  background-color: #8fadd64f !important;
+}
+.selected_company_assing{
+  background-color: #8fadd64f !important;
+  box-shadow: 2px 2px 10px rgb(87 87 87 / 15%);
+  cursor: pointer;
+}
+.empty-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
+.empty-content p {
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.left20vw{
+  left: 20vw !important;
+}
+.desable_licence{
+  display: none;
+  position: absolute;
+  font-weight: 600;
+  font-size: 10px;
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 5px;
+  right: 10px;
+  margin: 70px 0px 0px;
+  cursor: pointer;
+  /* border: 1px solid #ffffff; */
+  color: #ae2e1a;
+}
+.enable_licence{
+  display: none;
+  position: absolute;
+  font-weight: 600;
+  font-size: 10px;
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 5px;
+  right: 10px;
+  margin: 70px 0px 0px;
+  cursor: pointer;
+  /* border: 1px solid #ffffff; */
+  color: #1aae55 !important;
+}
+
+.box_licence_content:hover .desable_licence{
+  display: block;
+}
+.box_licence_content:hover .enable_licence{
+  display: block;
 }
 /******************************************** planning **************************************************************/
 /***********************************                          *************************************************************/
@@ -1038,8 +1111,8 @@ a{
 
 #head-side-menu{ padding-top: 30px;}
 
-
 #side_menu{position: fixed;right: 0px; top:0px;width: 50vw;height: 100vh;grid-template-rows: 10% 1fr 15%;animation: fadec 0.5s forwards ease-out;display: none;z-index: 500;}
+#right_side_menu{position: fixed; padding: 20px;right: 0px; top:0px;width: 30vw;height: 100vh;    grid-template-rows:100px; display: none;z-index: 500;}
 #side_menu_container{position: fixed;right: 0px; top:0px;width: 50vw;height: 100vh;grid-template-rows: 10% 1fr;animation: fadec 0.5s forwards ease-out;display: none;z-index: 500;}
 #side_menu_add_container{grid-template-rows: 10% 1fr 10%;animation: fadec 0.3s forwards ease-out;width: 40VW;height: 100vh;;background-color: rgb(238, 238, 238);position: fixed;z-index: 300;top: 0;right: 0;display: none;}
 @keyframes fadec { from {right:-10%; opacity:0.6;} to {right:0%; opacity:1;}}
@@ -1054,10 +1127,6 @@ a{
     font-weight: 600;}
 @media screen and (min-width:0px) and (max-width:1000px) {
   #side_menu{width: 100vw;}
-  #side_menu2{width: 100vw;}
-  #side_menu3{width: 100vw;}
-  #side_menu4{width: 100vw;}
-  #side_menu5{width: 100vw;}
   /* .title_medium{display: none;} */
 
 }
@@ -1065,7 +1134,7 @@ a{
 .header_side_menu .title { font-size: 20px;font-weight:600; text-align: center; color: #11c3c0;}
 .title .exit { font-size: 20px;font-weight:300;}
 .footer_side_menu{height: 100%;background-color: white; border-top: 1px solid rgba(231, 231, 231, 0.8);box-shadow:1px 1px 10px rgba(180, 180, 180, 0.4) ;}
-.content_editable{ border: solid 1.7px #adb9ca; border-radius: 5px; padding: 15px; text-align: left;outline-color: rgb(80 185 72); width:100%; -webkit-appearance: revert; font-weight: 600; }
+.content_editable{ border: solid 1.7px #adb9ca; border-radius: 5px; padding: 15px !important; background-color: white !important; text-align: left;outline-color: rgb(80 185 72); width:100%; -webkit-appearance: revert; font-weight: 600; }
 .content_editable:focus{border-color: #9aafae61;
   box-shadow: 0 0 10px #2996944a;}
 input:focus{     border-color: #3971744d;
@@ -1507,7 +1576,7 @@ select:focus{       border-color: #6cd7dd4d;
   cursor: pointer;
 }
 
-.dropdown-content div:hover {background-color: #ddd;}
+.dropdown-content div:hover {background-color: #f1f1f1;}
 .dropdown a:hover {background-color: #ddd;}
 #notifications_indicator{
   background-color: rgb(255, 0, 0);
@@ -1521,12 +1590,10 @@ select:focus{       border-color: #6cd7dd4d;
 }
 
 
-  /*--------------------------------------------------------------
+/*--------------------------------------------------------------
 # Contact
 --------------------------------------------------------------*/
-#ajs{
-  display: none;
-}
+
 .contact .info {
     width: 100%;
     background: #fff;
@@ -1750,6 +1817,63 @@ select:focus{       border-color: #6cd7dd4d;
     -ms-user-select: none;
     user-select: none;
   }
+  .checkbox-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 20px 0px;
+
+  }
+  
+  .checkbox-group label {
+    display: inline-block;
+    margin: 0 10px;
+    cursor: pointer;
+    position: relative;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.25rem;
+    font-family: Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;
+    color: rgb(37 80 94);
+  }
+  
+  .checkbox-group input[type="checkbox"] {
+    border: 1px solid #418a98 !important;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    box-shadow: none
+    ;
+  }
+  .checkbox-group input[type="checkbox"]:focus{
+    background: #418a98 !important;
+  }
+  .background-selected{
+    background: #418a98 !important;
+  }
+  .checkbox-group input[type="checkbox"] + label:before {
+    content: "";
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    background-color: #fff;
+    border: 2px solid #333;
+    border-radius: 4px;
+    vertical-align: middle;
+    position: relative;
+    top: -2px;
+  }
+  
+  .checkbox-group input[type="checkbox"]:checked + label:before {
+    content: "\2714";
+    color: #fff;
+    background-color: #333;
+    text-align: center;
+    font-size: 16px;
+    line-height: 20px;
+  }
+  
 
   #cercle {
     width: 10px;
@@ -1862,41 +1986,6 @@ select:focus{       border-color: #6cd7dd4d;
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
